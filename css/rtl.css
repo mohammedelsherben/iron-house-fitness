@@ -1,0 +1,60 @@
+/* ==========================================================
+   IRON HOUSE FITNESS — Arabic / right-to-left overrides
+   Active only when <html dir="rtl"> (set by js/i18n.js).
+   ========================================================== */
+[dir="rtl"] {
+  --font-display: "Cairo", "Segoe UI", Tahoma, sans-serif;
+  --font-body: "Cairo", "Segoe UI", Tahoma, sans-serif;
+}
+/* Arabic letters join, so letter-spacing and uppercase must be off */
+[dir="rtl"] :where(h1, h2, h3, h4, p, a, button, span, li, label, td, th, dt, dd, input, select, textarea, blockquote, figcaption, strong, em, small, div) { letter-spacing: 0; text-transform: none; }
+[dir="rtl"] .wordmark span { letter-spacing: 0.04em; }
+[dir="rtl"] .wordmark small { letter-spacing: 0.4em; text-transform: uppercase; }
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4 { line-height: 1.3; font-weight: 800; }
+[dir="rtl"] .hero h1 { font-size: clamp(2.8rem, 8vw, 5.6rem); max-width: 14ch; line-height: 1.15; }
+[dir="rtl"] .section-head h2, [dir="rtl"] .contact-grid h2, [dir="rtl"] .cta h2 { font-size: clamp(2rem, 5vw, 3.4rem); }
+[dir="rtl"] .stat strong, [dir="rtl"] .plan-price strong, [dir="rtl"] .kpi-value, [dir="rtl"] .class-time strong { font-family: "Barlow Condensed", var(--font-display); }
+[dir="rtl"] .eyebrow { letter-spacing: 0.04em; }
+
+[dir="rtl"] .legal-back .icon { transform: none; }
+.legal-back .icon { transform: scaleX(-1); }
+
+/* Language toggle button */
+.lang-toggle { height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--border-strong); background: transparent; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; margin-inline-start: 12px; flex: none; }
+.lang-toggle:hover { border-color: var(--lime); color: var(--lime); }
+.header-inner .lang-toggle { margin-inline-start: auto; margin-inline-end: 10px; }
+@media (min-width: 961px) { .header-inner .lang-toggle { margin-inline-start: 18px; margin-inline-end: 0; } .header-inner { gap: 16px; } .header-inner .main-nav { margin-inline-start: auto; } }
+
+/* Arrows and direction-sensitive icons */
+[dir="rtl"] .flip-rtl { transform: scaleX(-1); }
+[dir="rtl"] .btn:hover .icon { transform: translateX(-3px); }
+[dir="rtl"] .btn:hover .flip-rtl { transform: scaleX(-1) translateX(3px); }
+
+/* Website layout mirrors */
+[dir="rtl"] .hero-media::after { background: linear-gradient(270deg, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.75) 45%, rgba(10, 10, 10, 0.3) 100%), linear-gradient(0deg, var(--bg) 0%, transparent 25%); }
+[dir="rtl"] .main-nav > a:not(.btn)::after { transform-origin: right; }
+[dir="rtl"] .plan-tag { left: auto; right: 30px; }
+[dir="rtl"] .card-tag { left: auto; right: 12px; }
+[dir="rtl"] .class-time { padding-right: 0; border-right: 0; padding-left: 18px; border-left: 1px solid var(--border-strong); }
+[dir="rtl"] .hours td { padding: 2px 0 2px 24px; }
+[dir="rtl"] .select { background-position: left 12px center; padding-right: 14px; padding-left: 38px; }
+[dir="rtl"] .select-sm { background-position: left 8px center; padding: 7px 10px 7px 28px; }
+[dir="rtl"] .modal-close { right: auto; left: 14px; }
+[dir="rtl"] .modal h2 { padding-inline-end: 44px; }
+[dir="rtl"] .week-table th, [dir="rtl"] .week-table td, [dir="rtl"] .table th { text-align: right; }
+[dir="rtl"] .week-table th { width: 110px; }
+[dir="rtl"] input[type="email"], [dir="rtl"] input[type="tel"], [dir="rtl"] input[type="number"] { direction: ltr; text-align: right; }
+[dir="rtl"] .search .icon { left: auto; right: 14px; }
+[dir="rtl"] .search .input { padding-left: 14px; padding-right: 40px; }
+[dir="rtl"] .testi blockquote { text-align: start; }
+
+/* Dashboard mirrors */
+[dir="rtl"] .sidebar { border-right: 0; border-left: 1px solid var(--border); }
+[dir="rtl"] .side-nav a, [dir="rtl"] .side-link { text-align: right; }
+[dir="rtl"] .chart svg { direction: ltr; }
+@media (max-width: 860px) {
+  [dir="rtl"] .sidebar { inset: 0 0 0 auto; transform: translateX(102%); }
+  [dir="rtl"] .sidebar.open { transform: none; }
+}
+[dir="rtl"] .toasts { direction: rtl; }
+@media (max-width: 960px) { [dir="rtl"] .main-nav { text-align: right; } }
