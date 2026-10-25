@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy | IRON HOUSE FITNESS</title>
+  <meta name="description" content="Privacy policy of the IRON HOUSE FITNESS demo website: what data the forms handle, browser storage, third-party services and your choices.">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/rtl.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header scrolled">
+    <div class="container header-inner">
+      <a href="index.html" class="wordmark" aria-label="IRON HOUSE FITNESS home">
+        <svg class="wordmark-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 12v8M8 8v16M24 8v16M28 12v8M8 16h16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>IRON HOUSE<small>FITNESS</small></span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main" class="container legal">
+    <a class="legal-back" href="index.html"><i data-icon="arrow-right" class="flip-back"></i> Back to the website</a>
+    <h1>Privacy Policy</h1>
+    <p>This page explains what happens to your information when you use the IRON HOUSE FITNESS website.</p>
+    <div class="alert"><i data-icon="info"></i><span>This is a template for a demo website and not legal advice. Before launching a real gym website, replace it with a policy reviewed by a lawyer.</span></div>
+
+    <h2>Who we are</h2>
+    <p>IRON HOUSE FITNESS is a fictional demo gym created for a web development portfolio. No real business, members or payments exist behind this site.</p>
+
+    <h2>Information the forms handle</h2>
+    <p>The registration, booking and contact forms ask for your name, email address and phone number. In this demo, the details you type are stored only in your own browser and are never sent to a server or to anyone else.</p>
+
+    <h2>Browser storage and cookies</h2>
+    <p>The site stores your language choice, whether you closed the storage notice, and the demo data you create (memberships, bookings and plan prices) in your browser's local storage. It uses no tracking or advertising cookies.</p>
+
+    <h2>Third-party services</h2>
+    <p>To display the site, your browser loads fonts from Google Fonts and photos from Unsplash. If you press Show map, the map is loaded from OpenStreetMap. If you press the WhatsApp button, you leave this site and WhatsApp's own privacy policy applies. These services may receive your IP address when they load.</p>
+
+    <h2>Voice features</h2>
+    <p>The Listen buttons use your browser's built-in text-to-speech. The text is read aloud on your own device.</p>
+
+    <h2>Health information</h2>
+    <p>Programs and exercise guides are general fitness information, not medical advice. The site does not collect health data.</p>
+
+    <h2>Your choices</h2>
+    <p>You can delete all demo data at any time with Reset demo data in the dashboard, or by clearing this site's data in your browser settings.</p>
+
+    <h2>If this were a real gym</h2>
+    <p>A real gym website must say who is responsible for the data, why each piece of data is collected, how long it is kept, who receives it, and how members can ask to see, correct or delete it. Complete these points with a lawyer before launch.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy: privacy@your-gym.example (placeholder).</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-legal">
+      <p>© <span id="year">2026</span> IRON HOUSE FITNESS. Fictional brand created for portfolio demonstration.</p>
+      <p><a href="index.html">Home</a></p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/i18n.js"></script>
+  <script>
+    UI.hydrateIcons();
+    UI.storageNotice();
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

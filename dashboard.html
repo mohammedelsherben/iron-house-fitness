@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Demo | IRON HOUSE FITNESS</title>
+  <meta name="description" content="Demo gym management dashboard for IRON HOUSE FITNESS: members, memberships, revenue chart and plans. All data is fictional and stored only in your browser.">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/rtl.css">
+</head>
+<body>
+  <a class="skip-link" href="#dash-main">Skip to main content</a>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar" aria-label="Dashboard navigation">
+      <a href="index.html" class="wordmark" aria-label="IRON HOUSE FITNESS website">
+        <svg class="wordmark-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 12v8M8 8v16M24 8v16M28 12v8M8 16h16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>IRON HOUSE<small>ADMIN DEMO</small></span>
+      </a>
+      <nav class="side-nav">
+        <a href="#overview" data-view="overview"><i data-icon="dashboard"></i> Overview</a>
+        <a href="#members" data-view="members"><i data-icon="users"></i> Members</a>
+        <a href="#plans" data-view="plans"><i data-icon="card"></i> Membership plans</a>
+        <a href="#bookings" data-view="bookings"><i data-icon="calendar"></i> Bookings</a>
+      </nav>
+      <div class="side-foot">
+        <a href="index.html" class="side-link"><i data-icon="home"></i> Back to website</a>
+        <button type="button" class="side-link" id="reset-demo"><i data-icon="refresh"></i> Reset demo data</button>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <div class="content">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="open-sidebar" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"><i data-icon="menu"></i></button>
+        <div class="topbar-title"><h1 id="view-title">Overview</h1><p id="view-sub"></p></div>
+        <span class="badge badge-demo">Demo</span>
+      </header>
+      <div class="demo-banner" role="note"><i data-icon="info"></i><span>Demonstration dashboard. All members, revenue and plans are fictional sample data stored only in your browser. No real customers or financial transactions.</span></div>
+
+      <main id="dash-main" tabindex="-1">
+        <div id="error-box"></div>
+
+        <!-- Overview -->
+        <section class="view" id="view-overview" aria-labelledby="view-title" hidden>
+          <div class="kpis" id="kpis"></div>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head"><h2>Monthly revenue</h2><span class="muted">Fictional data · EGP</span></div>
+              <div id="chart" class="chart" role="img" aria-label="Bar chart of fictional monthly revenue for the last 12 months"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><h2>Expiring soon</h2><span class="muted">Next 14 days</span></div>
+              <ul class="list" id="expiring-list"></ul>
+            </article>
+          </div>
+          <article class="panel">
+            <div class="panel-head"><h2>Recent registrations</h2><a href="#members" class="link">View all members</a></div>
+            <div class="table-wrap"><table class="table" id="recent-table"></table></div>
+          </article>
+        </section>
+
+        <!-- Members -->
+        <section class="view" id="view-members" aria-labelledby="view-title" hidden>
+          <div class="panel">
+            <div class="toolbar-d">
+              <div class="search"><i data-icon="search"></i><label for="m-search" class="sr-only">Search members</label><input id="m-search" class="input" type="search" placeholder="Search by name, email or ID"></div>
+              <label class="sr-only" for="m-status">Filter by status</label>
+              <select id="m-status" class="select">
+                <option value="all">All statuses</option>
+                <option>Active</option><option>Expiring</option><option>Expired</option><option>Pending</option><option>Frozen</option><option>Cancelled</option>
+              </select>
+              <label class="sr-only" for="m-plan">Filter by plan</label>
+              <select id="m-plan" class="select"><option value="all">All plans</option></select>
+              <button type="button" class="btn btn-ghost btn-sm" id="export-csv"><i data-icon="download"></i> Export CSV</button>
+              <button type="button" class="btn btn-primary btn-sm" id="add-member"><i data-icon="plus"></i> Add member</button>
+            </div>
+            <p class="muted count" id="m-count" aria-live="polite"></p>
+            <div class="table-wrap"><table class="table members" id="members-table"></table></div>
+            <div id="m-empty"></div>
+            <div class="pager" id="pager"></div>
+          </div>
+        </section>
+
+        <!-- Plans -->
+        <section class="view" id="view-plans" aria-labelledby="view-title" hidden>
+          <div class="plans-d" id="plans-d"></div>
+          <p class="muted note">Changing a price here also updates the public website's plan cards in this browser, a simple preview of what a connected admin panel would do.</p>
+        </section>
+        <!-- Bookings -->
+        <section class="view" id="view-bookings" aria-labelledby="view-title" hidden>
+          <div class="panel">
+            <p class="muted count" id="b-count" aria-live="polite"></p>
+            <div class="table-wrap"><table class="table bookings" id="bookings-table"></table></div>
+            <div id="b-empty"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

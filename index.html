@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IRON HOUSE FITNESS | Premium Gym Website Demo</title>
+  <meta name="description" content="IRON HOUSE FITNESS is a premium gym website demo: workout programs, trainers, membership plans, class schedule and a membership management dashboard. All content is fictional demo data.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!-- Social sharing preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="IRON HOUSE FITNESS | Premium Gym Website Demo">
+  <meta property="og:description" content="Workout programs, trainers, memberships, class schedule and a gym management dashboard demo.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&h=630&q=70">
+  <meta property="og:image:alt" content="Athlete preparing for a barbell deadlift in a dark gym">
+  <meta property="og:site_name" content="IRON HOUSE FITNESS">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ar_EG">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IRON HOUSE FITNESS | Premium Gym Website Demo">
+  <meta name="twitter:description" content="Workout programs, trainers, memberships, class schedule and a gym management dashboard demo.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&h=630&q=70">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+
+  <!-- Structured data for search engines. When this becomes a real gym, add "url", "telephone" and "address" to the first block. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ExerciseGym",
+    "name": "IRON HOUSE FITNESS",
+    "description": "Premium gym with workout programs, certified trainers, membership plans and a weekly class schedule. Fictional demo business created for a web development portfolio.",
+    "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&h=630&q=70",
+    "priceRange": "800 - 7200 EGP",
+    "areaServed": "Egypt",
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"], "opens": "06:00", "closes": "23:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "10:00", "closes": "20:00" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "How do I join IRON HOUSE FITNESS?", "acceptedAnswer": { "@type": "Answer", "text": "Pick a membership plan in the Membership section and fill in the short form. The gym team then contacts you to complete your registration." } },
+      { "@type": "Question", "name": "Can I try the gym before I commit?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Book a free intro consultation with a trainer and ask about a trial visit." } },
+      { "@type": "Question", "name": "Are the programs suitable for beginners?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every program shows its difficulty level. Start with Beginner Strength or Functional Fitness, and ask a coach if you are unsure." } },
+      { "@type": "Question", "name": "Do I need to book classes in advance?", "acceptedAnswer": { "@type": "Answer", "text": "Booking is recommended for busy evening classes. You can also book a one-to-one session with a trainer using the Book trainer buttons." } },
+      { "@type": "Question", "name": "What are the opening hours?", "acceptedAnswer": { "@type": "Answer", "text": "Saturday to Thursday 06:00 to 23:00, and Friday 10:00 to 20:00." } },
+      { "@type": "Question", "name": "Can I freeze or cancel my membership?", "acceptedAnswer": { "@type": "Answer", "text": "Annual members can freeze their membership for up to 14 days. Ask the gym team about other options." } },
+      { "@type": "Question", "name": "Is the exercise guidance medical advice?", "acceptedAnswer": { "@type": "Answer", "text": "No. Programs and exercise guides are general fitness information. Please consult a doctor before starting a new routine, and stop if anything hurts." } },
+      { "@type": "Question", "name": "What should I bring?", "acceptedAnswer": { "@type": "Answer", "text": "Comfortable training clothes, indoor shoes, a towel and a water bottle. Lockers and showers are available." } }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/rtl.css">
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <div class="demo-bar" role="note">
+    <span class="badge badge-demo">Demo</span>
+    Portfolio demo website. All names, prices, trainers and statistics are fictional placeholders.
+  </div>
+
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="#top" class="wordmark" aria-label="IRON HOUSE FITNESS home">
+        <svg class="wordmark-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 12v8M8 8v16M24 8v16M28 12v8M8 16h16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>IRON HOUSE<small>FITNESS</small></span>
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <a href="#programs">Programs</a>
+        <a href="#trainers">Trainers</a>
+        <a href="#plans">Membership</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+        <a href="dashboard.html" class="nav-dash"><i data-icon="dashboard"></i> Dashboard Demo</a>
+        <a href="#plans" class="btn btn-primary btn-sm nav-cta">Join Now</a>
+      </nav>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i data-icon="menu"></i></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ================= HERO ================= -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-media">
+        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1600&q=70"
+             srcset="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=65 900w, https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1600&q=70 1600w, https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=2200&q=70 2200w"
+             sizes="100vw" alt="Athlete gripping a loaded barbell, preparing for a deadlift on a dark gym floor" fetchpriority="high" width="1600" height="1067">
+      </div>
+      <div class="container hero-inner">
+        <p class="eyebrow">Premium training · Cairo, Egypt (demo)</p>
+        <h1 id="hero-title">Forge a <span class="accent">stronger</span> you.</h1>
+        <p class="hero-lead">IRON HOUSE FITNESS is where serious equipment meets coaching that actually cares. Train with structured programs, expert-led classes and a community that pushes you further.</p>
+        <div class="hero-actions">
+          <a href="#plans" class="btn btn-primary">Start Your Journey <i data-icon="arrow-right"></i></a>
+          <a href="#programs" class="btn btn-ghost">Explore Programs</a>
+        </div>
+        <ul class="hero-points" aria-label="Highlights">
+          <li><i data-icon="check"></i> Pro-grade equipment</li>
+          <li><i data-icon="check"></i> Certified coaches</li>
+          <li><i data-icon="check"></i> Flexible plans</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= STATS ================= -->
+    <section class="stats" aria-label="Gym statistics (demo data)">
+      <div class="container stats-grid">
+        <div class="stat"><strong data-count="2">2</strong><span>Expert trainers</span></div>
+        <div class="stat"><strong data-count="40" data-suffix="+">40+</strong><span>Workout programs</span></div>
+        <div class="stat"><strong data-count="1200" data-suffix="+">1,200+</strong><span>Active members</span></div>
+        <div class="stat"><strong data-count="60" data-suffix="+">60+</strong><span>Weekly classes</span></div>
+      </div>
+      <p class="container stats-note">Statistics shown are demo data for presentation purposes.</p>
+    </section>
+
+    <!-- ================= BENEFITS ================= -->
+    <section class="section" id="why" aria-labelledby="why-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Why IRON HOUSE</p>
+          <h2 id="why-title">Built for people who <span class="accent">show up</span></h2>
+          <p>Everything a serious training space needs, without the noise.</p>
+        </header>
+        <div class="benefits" id="benefits"></div>
+      </div>
+    </section>
+
+    <!-- ================= PROGRAMS ================= -->
+    <section class="section alt" id="programs" aria-labelledby="programs-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Workout programs</p>
+          <h2 id="programs-title">Pick a program, <span class="accent">own the plan</span></h2>
+          <p>Sample programs for demonstration. They are general fitness content, not individualized medical or professional advice. Consult a doctor before starting any new exercise routine.</p>
+        </header>
+        <div class="toolbar reveal">
+          <div class="chips" id="program-filters" role="group" aria-label="Filter programs by category"></div>
+          <div class="toolbar-select">
+            <label for="program-level" class="sr-only">Filter by difficulty</label>
+            <select id="program-level" class="select">
+              <option value="all">All levels</option>
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+            </select>
+          </div>
+        </div>
+        <p class="result-count" id="program-count" aria-live="polite"></p>
+        <div class="card-grid" id="program-grid"></div>
+      </div>
+    </section>
+
+    <!-- ================= TRAINERS ================= -->
+    <section class="section" id="trainers" aria-labelledby="trainers-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Meet the team</p>
+          <h2 id="trainers-title">Coaches who <span class="accent">raise the bar</span></h2>
+          <p>Fictional demo trainers. Replace with your real team and photos.</p>
+        </header>
+        <div class="trainer-grid" id="trainer-grid"></div>
+      </div>
+    </section>
+
+    <!-- ================= PLANS ================= -->
+    <section class="section alt" id="plans" aria-labelledby="plans-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Membership plans</p>
+          <h2 id="plans-title">Simple plans, <span class="accent">no surprises</span></h2>
+          <p>Prices are demo placeholders in Egyptian pounds (EGP) that gym owners can customise. No real payment is taken on this site.</p>
+        </header>
+        <div class="plan-grid" id="plan-grid"></div>
+      </div>
+    </section>
+
+    <!-- ================= SCHEDULE ================= -->
+    <section class="section" id="schedule" aria-labelledby="schedule-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Class schedule</p>
+          <h2 id="schedule-title">Your week, <span class="accent">planned</span></h2>
+          <p>A sample weekly timetable. Filter by day or training type.</p>
+        </header>
+        <div class="toolbar reveal">
+          <div class="chips" id="day-filters" role="group" aria-label="Filter classes by day"></div>
+        </div>
+        <div class="toolbar reveal">
+          <div class="chips" id="type-filters" role="group" aria-label="Filter classes by training type"></div>
+        </div>
+        <p class="result-count" id="class-count" aria-live="polite"></p>
+        <div class="class-grid" id="class-grid"></div>
+      </div>
+    </section>
+
+    <!-- ================= TESTIMONIALS ================= -->
+    <section class="section alt" aria-labelledby="testi-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Member stories</p>
+          <h2 id="testi-title">Real routines, <span class="accent">demo voices</span></h2>
+          <p>Testimonials below are fictional demo profiles written for this portfolio.</p>
+        </header>
+        <div class="testi-grid" id="testi-grid"></div>
+      </div>
+    </section>
+
+    <!-- ================= CALORIE CALCULATOR ================= -->
+    <section class="section alt" id="calculator" aria-labelledby="calc-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Calorie calculator</p>
+          <h2 id="calc-title">Know your <span class="accent">numbers</span></h2>
+          <p>Estimate how many calories you need each day and how to split them into protein, carbs and fat. A general estimate, not medical or nutrition advice.</p>
+        </header>
+        <div class="calc-grid reveal">
+          <form class="calc-form" id="calc-form" novalidate>
+            <div class="form-row">
+              <div class="field"><label for="k-sex">Sex</label>
+                <select class="select" id="k-sex"><option value="male">Male</option><option value="female">Female</option></select></div>
+              <div class="field"><label for="k-age">Age (years)</label><input class="input" id="k-age" type="number" inputmode="numeric" min="15" max="80" data-rule="age" placeholder="e.g. 28"><div class="field-error" role="alert"></div></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label for="k-height">Height (cm)</label><input class="input" id="k-height" type="number" inputmode="decimal" min="120" max="230" data-rule="height" placeholder="e.g. 175"><div class="field-error" role="alert"></div></div>
+              <div class="field"><label for="k-weight">Weight (kg)</label><input class="input" id="k-weight" type="number" inputmode="decimal" min="30" max="250" data-rule="weight" placeholder="e.g. 78"><div class="field-error" role="alert"></div></div>
+            </div>
+            <div class="field"><label for="k-activity">Activity level</label>
+              <select class="select" id="k-activity">
+                <option value="1.2">Sedentary: little or no exercise</option>
+                <option value="1.375">Light: exercise 1–3 days a week</option>
+                <option value="1.55" selected>Moderate: exercise 3–5 days a week</option>
+                <option value="1.725">Active: hard exercise 6–7 days a week</option>
+                <option value="1.9">Very active: hard training twice a day</option>
+              </select></div>
+            <div class="field"><span class="label" id="k-goal-label">Your goal</span>
+              <div class="chips" id="k-goals" role="radiogroup" aria-labelledby="k-goal-label">
+                <button type="button" class="chip" role="radio" aria-checked="false" data-goal="lose">Lose fat</button>
+                <button type="button" class="chip" role="radio" aria-checked="true" data-goal="maintain">Maintain weight</button>
+                <button type="button" class="chip" role="radio" aria-checked="false" data-goal="gain">Build muscle</button>
+              </div></div>
+            <button class="btn btn-primary btn-block" type="submit">Calculate <i data-icon="arrow-right"></i></button>
+          </form>
+          <div class="calc-result" id="calc-result" aria-live="polite">
+            <div class="calc-empty"><i data-icon="target"></i><p>Fill in the form and press Calculate to see your daily targets.</p></div>
+          </div>
+        </div>
+        <p class="ex-note calc-note">Uses the Mifflin-St Jeor equation. Results are estimates and vary from person to person. Talk to a doctor or dietitian before changing your diet, especially if you are under 18, pregnant, or have a health condition.</p>
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="container faq-wrap">
+        <header class="section-head reveal">
+          <p class="eyebrow">Frequently asked questions</p>
+          <h2 id="faq-title">Got questions? <span class="accent">We have answers</span></h2>
+          <p>Sample answers for demonstration. Replace them with your gym's real policies.</p>
+        </header>
+        <div class="faq-list reveal">
+          <details><summary>How do I join IRON HOUSE FITNESS?</summary><p>Pick a membership plan in the Membership section and fill in the short form. The gym team then contacts you to complete your registration.</p></details>
+          <details><summary>Can I try the gym before I commit?</summary><p>Yes. Book a free intro consultation with a trainer and ask about a trial visit.</p></details>
+          <details><summary>Are the programs suitable for beginners?</summary><p>Yes. Every program shows its difficulty level. Start with Beginner Strength or Functional Fitness, and ask a coach if you are unsure.</p></details>
+          <details><summary>Do I need to book classes in advance?</summary><p>Booking is recommended for busy evening classes. You can also book a one-to-one session with a trainer using the Book trainer buttons.</p></details>
+          <details><summary>What are the opening hours?</summary><p>Saturday to Thursday 06:00 to 23:00, and Friday 10:00 to 20:00.</p></details>
+          <details><summary>Can I freeze or cancel my membership?</summary><p>Annual members can freeze their membership for up to 14 days. Ask the gym team about other options.</p></details>
+          <details><summary>Is the exercise guidance medical advice?</summary><p>No. Programs and exercise guides are general fitness information. Please consult a doctor before starting a new routine, and stop if anything hurts.</p></details>
+          <details><summary>What should I bring?</summary><p>Comfortable training clothes, indoor shoes, a towel and a water bottle. Lockers and showers are available.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA ================= -->
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="cta-media"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=60" alt="Rows of dumbbells on racks in a bright modern gym" loading="lazy" width="1600" height="1067"></div>
+      <div class="container cta-inner reveal">
+        <h2 id="cta-title">Your first session <span class="accent">starts today</span></h2>
+        <p>Choose a plan, pick your first class and let our coaches handle the rest.</p>
+        <div class="hero-actions center">
+          <a href="#plans" class="btn btn-primary">Choose a Plan <i data-icon="arrow-right"></i></a>
+          <a href="#contact" class="btn btn-ghost">Talk to Us</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="container contact-grid">
+        <div class="reveal">
+          <p class="eyebrow">Contact</p>
+          <h2 id="contact-title">Questions? <span class="accent">Let's talk</span></h2>
+          <p class="contact-lead">Contact details below are placeholders. Swap in the real gym details before launch.</p>
+          <ul class="contact-list">
+            <li><i data-icon="phone"></i><div><strong>Phone</strong><span><bdi dir="ltr">+20 000 000 0000</bdi> <em>(placeholder)</em></span></div></li>
+            <li><i data-icon="mail"></i><div><strong>Email</strong><span><bdi dir="ltr">hello@your-gym.example</bdi> <em>(placeholder)</em></span></div></li>
+            <li><i data-icon="map-pin"></i><div><strong>Address</strong><span>123 Example Street, Your City, Egypt <em>(placeholder)</em></span></div></li>
+            <li><i data-icon="clock"></i><div><strong>Opening hours</strong>
+              <table class="hours"><tbody>
+                <tr><td>Saturday – Thursday</td><td>06:00 – 23:00</td></tr>
+                <tr><td>Friday</td><td>10:00 – 20:00</td></tr>
+              </tbody></table></div></li>
+          </ul>
+          <div class="socials" aria-label="Social media">
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram (placeholder link)"><i data-icon="instagram"></i></a>
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook (placeholder link)"><i data-icon="facebook"></i></a>
+            <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube (placeholder link)"><i data-icon="youtube"></i></a>
+          </div>
+        </div>
+        <form class="contact-form reveal" id="contact-form" novalidate>
+          <h3>Send a message</h3>
+          <div class="form-row">
+            <div class="field"><label for="c-name">Full name</label><input class="input" id="c-name" name="name" autocomplete="name" data-rule="name" placeholder="Your name"><div class="field-error" role="alert"></div></div>
+            <div class="field"><label for="c-email">Email</label><input class="input" id="c-email" name="email" type="email" autocomplete="email" data-rule="email" placeholder="you@example.com"><div class="field-error" role="alert"></div></div>
+          </div>
+          <div class="field"><label for="c-message">Message</label><textarea class="textarea" id="c-message" name="message" data-rule="message" placeholder="How can we help?"></textarea><div class="field-error" role="alert"></div></div>
+          <button class="btn btn-primary btn-block" type="submit">Send Message <i data-icon="arrow-right"></i></button>
+          <div id="contact-result" aria-live="polite"></div>
+          <p class="form-note">Demo form: messages are not sent anywhere because this site has no backend.</p>
+        </form>
+      </div>
+      <div class="container map-block reveal">
+        <div class="map-card" id="map-card">
+          <div class="map-placeholder">
+            <i data-icon="map-pin"></i>
+            <h3>Find us</h3>
+            <p>The map loads only when you press the button, so no outside service sees your visit before that. The location shown is an example in Cairo. Replace it with your gym's address.</p>
+            <div class="map-actions">
+              <button type="button" class="btn btn-primary btn-sm" id="map-load">Show map</button>
+              <a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/search/?api=1&amp;query=30.0444,31.2357" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <a class="wa-float" id="wa-btn" href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"><i data-icon="whatsapp"></i><span>Chat on WhatsApp</span></a>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="#top" class="wordmark" aria-label="Back to top">
+          <svg class="wordmark-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 12v8M8 8v16M24 8v16M28 12v8M8 16h16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          <span>IRON HOUSE<small>FITNESS</small></span>
+        </a>
+        <p class="footer-statement">Strength is built one honest rep at a time. Train hard, recover well, and keep showing up.</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="#programs">Programs</a></li>
+          <li><a href="#trainers">Trainers</a></li>
+          <li><a href="#plans">Membership</a></li>
+          <li><a href="#schedule">Schedule</a></li>
+          <li><a href="#calculator">Calorie Calculator</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="dashboard.html">Dashboard Demo</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h3>Follow</h3>
+        <div class="socials">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram (placeholder link)"><i data-icon="instagram"></i></a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook (placeholder link)"><i data-icon="facebook"></i></a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube (placeholder link)"><i data-icon="youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="container footer-legal">
+      <p>© <span id="year">2026</span> IRON HOUSE FITNESS. Fictional brand created for portfolio demonstration.</p>
+      <p>Program content is general information, not medical advice. Photos via Unsplash.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/exercises.js"></script>
+  <script src="js/exercise-info.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
