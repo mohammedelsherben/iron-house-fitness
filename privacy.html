@@ -9,21 +9,18 @@
   <meta name="robots" content="index, follow">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://iron-house-fitness.vercel.app/privacy.html">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/rtl.css">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.min.css">
+  <script>(function(d){try{if(localStorage.getItem("ironhouse.lang")==="ar"){d.lang="ar";d.dir="rtl";}}catch(e){}})(document.documentElement);</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="site-header scrolled">
     <div class="container header-inner">
-      <a href="index.html" class="wordmark" aria-label="IRON HOUSE FITNESS home">
+      <a href="index.html" class="wordmark">
         <svg class="wordmark-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 12v8M8 8v16M24 8v16M28 12v8M8 16h16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
-        <span>IRON HOUSE<small>FITNESS</small></span>
+        <span>IRON HOUSE <small>FITNESS</small></span>
       </a>
     </div>
   </header>
@@ -38,13 +35,13 @@
     <p>IRON HOUSE FITNESS is a fictional demo gym created for a web development portfolio. No real business, members or payments exist behind this site.</p>
 
     <h2>Information the forms handle</h2>
-    <p>The registration, booking and contact forms ask for your name, email address and phone number. In this demo, the details you type are stored only in your own browser and are never sent to a server or to anyone else.</p>
+    <p>The membership, booking, class and contact forms ask for your name and mobile number, plus the plan, trainer, class or message you choose. When you submit, these details are placed in a WhatsApp message that opens on your device. It reaches the gym only when you press Send. We do not store the details on a server. A copy of your latest enquiries is kept in your own browser.</p>
 
     <h2>Browser storage and cookies</h2>
-    <p>The site stores your language choice, whether you closed the storage notice, and the demo data you create (memberships, bookings and plan prices) in your browser's local storage. It uses no tracking or advertising cookies.</p>
+    <p>The site stores your language choice, whether you closed the notices, and your recent enquiries in your browser's local storage. It uses no tracking or advertising cookies.</p>
 
     <h2>Third-party services</h2>
-    <p>To display the site, your browser loads fonts from Google Fonts and photos from Unsplash. If you press Show map, the map is loaded from OpenStreetMap. If you press the WhatsApp button, you leave this site and WhatsApp's own privacy policy applies. These services may receive your IP address when they load.</p>
+    <p>To display the site, your browser loads photos from Unsplash. If you press Show map, the map is loaded from OpenStreetMap. When you continue on WhatsApp or press the WhatsApp button, you leave this site and WhatsApp's own privacy policy applies. These services may receive your IP address when they load.</p>
 
     <h2>Voice features</h2>
     <p>The Listen buttons use your browser's built-in text-to-speech. The text is read aloud on your own device.</p>
@@ -59,23 +56,16 @@
     <p>A real gym website must say who is responsible for the data, why each piece of data is collected, how long it is kept, who receives it, and how members can ask to see, correct or delete it. Complete these points with a lawyer before launch.</p>
 
     <h2>Contact</h2>
-    <p>Questions about this policy: privacy@your-gym.example (placeholder).</p>
+    <p>Questions about this policy: <a class="contact-link" data-cfg="email" style="color:var(--lime);text-decoration:underline"></a></p>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-legal">
-      <p>© <span id="year">2026</span> IRON HOUSE FITNESS. Fictional brand created for portfolio demonstration.</p>
-      <p><a href="index.html">Home</a></p>
+      <p>© <span id="year">2026</span> IRON HOUSE FITNESS</p>
+      <p>Portfolio demo — all names, prices and data are fictional.</p>
     </div>
   </footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/i18n.js"></script>
-  <script>
-    UI.hydrateIcons();
-    UI.storageNotice();
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+  <script src="js/privacy.min.js" defer></script>
 </body>
 </html>

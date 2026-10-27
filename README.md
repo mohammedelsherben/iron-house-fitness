@@ -1,6 +1,8 @@
 # IRON HOUSE FITNESS
 
 A premium, dark-and-lime gym website with an interactive membership-management dashboard.
+Live demo: **https://iron-house-fitness.vercel.app**
+
 **Everything is demo content**: fictional trainers, prices, members, and statistics. See [PORTFOLIO.md](PORTFOLIO.md) for the portfolio description and feature lists.
 
 - `index.html`: the public website (home, programs, trainers, membership plans, class schedule, testimonials, contact)
@@ -49,7 +51,7 @@ This project is plain HTML, CSS and JavaScript, so there is nothing to install a
 
 > Why no React/Vite? The build machine had no Node.js installed, so the project uses a simpler stack that works everywhere. The code is still split into reusable renderer functions and shared modules, and can be ported to React later if a client needs it.
 
-An internet connection is needed to load the Google Fonts and the Unsplash photos. If a photo fails to load, a dark placeholder is shown instead and the layout does not break.
+An internet connection is needed to load the Unsplash photos (the fonts are now stored inside the project). If a photo fails to load, a dark placeholder is shown instead and the layout does not break.
 
 ## Project structure
 
@@ -67,9 +69,48 @@ iron-house-fitness/
 │   ├── exercise-info.js  How-to steps, tip and target muscle for every exercise (English + Arabic)
 │   ├── ui.js           Shared helpers: icons, modal, toast, form validation
 │   ├── main.js         Website behaviour
+│   ├── config.js       Phone, WhatsApp, email, address, social links
+│   ├── privacy.js      Privacy page behaviour
 │   └── dashboard.js    Dashboard behaviour
-└── assets/favicon.svg
+├── css/fonts.css       Self-hosted @font-face rules
+├── *.min.js / *.min.css  Built bundles the pages actually load (made by scripts/build.js)
+├── scripts/            build.js + optimize-images.js (developer tools, not part of the site)
+└── assets/             favicon.svg + fonts/
 ```
+
+## Performance and the build step
+
+The pages load the **minified bundles** (`js/site.min.js`, `js/privacy.min.js`, `js/dashboard.min.js`, `css/site.min.css`, `css/dashboard.min.css`). The readable files (`js/*.js`, `css/*.css`) are the ones you edit. After any edit, rebuild (needs [Node.js](https://nodejs.org) 18+):
+
+```bash
+npm --prefix scripts install
+node scripts/build.js
+```
+
+Then upload/publish the **whole folder**, including the `*.min.*` files. The build also inlines the small "critical" CSS for the top of the homepage into `index.html`, so the first screen paints without waiting for the full stylesheet.
+
+What was done for speed:
+- Fonts (Inter, Barlow Condensed, Cairo) are stored in `assets/fonts/` as woff2, only the weights the site uses, with `font-display: swap` and the main ones preloaded.
+- The top hero photo is preloaded with `fetchpriority="high"`, served in modern formats (AVIF/WebP chosen by the browser) at 6 sizes with `srcset`/`sizes`, and has `width`/`height` so nothing jumps.
+- All other photos are lazy-loaded with `decoding="async"` and sizes; the programs and trainers sections are drawn only when you scroll near them.
+- Scripts use `defer`; CSS and JS are minified.
+
+## Optimising your own photos (for gym owners)
+
+When you replace the Unsplash demo photos with real ones, shrink them first. Big phone photos (3–8 MB) are the #1 reason a gym site feels slow.
+
+1. Put your original photos in a folder, for example `my-photos`.
+2. Run:
+
+```bash
+npm --prefix scripts install
+node scripts/optimize-images.js my-photos
+```
+
+3. Open `assets/img-optimized/`. For every photo you get WebP and AVIF files at 640, 960, 1280 and 1600 px wide (never bigger than the original), plus `snippets.html` with ready-to-paste `<picture>` tags. Replace `DESCRIBE THE PHOTO` in the `alt` text with a real description.
+4. Rules of thumb: only the big photo at the very top of the page gets `fetchpriority="high"` and no `loading="lazy"`; every other photo keeps `loading="lazy"`. Always keep `width` and `height` on the `<img>`.
+
+Options: `--widths=480,800,1200`, `--quality=70` (WebP), `--avif-quality=50`. Output folder can be a 2nd argument.
 
 ## Customising it for a real gym
 
@@ -78,6 +119,21 @@ iron-house-fitness/
 3. **Photos**: replace the Unsplash URLs in `js/data.js` and `index.html` with the gym's own photos (put files in an `assets/` folder).
 4. **Contact details**: edit the placeholder phone, email, address, hours and social links in `index.html` (search for "placeholder").
 5. **Name**: search and replace `IRON HOUSE` across the files.
+
+## Site settings and WhatsApp leads
+
+**All contact details live in one file: `js/config.js`.** Edit it and the whole site follows:
+
+| Setting | Used for |
+|---|---|
+| `whatsappNumber` | Every WhatsApp link: `https://wa.me/<number>?text=<message>`. International format, digits only (Egypt: `20` + number without the leading 0). If empty, the floating button hides and the forms show a "call us" error. |
+| `phone`, `email`, `address` | Contact section and privacy page (`tel:` and `mailto:` links). An empty value hides that row. |
+| `instagram`, `facebook`, `youtube` | Social icons in the contact section and footer. Use full profile URLs. An empty value hides that icon (and the footer "Follow" column if all are empty). |
+| `mapLat`, `mapLng` | The "Find us" map and the Google Maps link. |
+
+The sample values in `config.js` look realistic but are **not real**: replace the WhatsApp number, phone, email, address and social URLs before using the site for a real gym (messages sent to the sample WhatsApp number could reach a stranger).
+
+**How leads work (no backend):** every *Join*, *Start your journey*, *Choose plan*, *Book with a trainer* and class *Join* button, and the contact form, asks for name + Egyptian mobile (`01XXXXXXXXX`; `+20…`, `0020…` and Arabic digits are accepted), validates it, then opens WhatsApp with a ready message in the page language (name, phone, plan / trainer / class / date / time). The visitor presses Send in WhatsApp. If the browser blocks the pop-up, an "Open WhatsApp" button appears. A copy of each enquiry is kept in the visitor's browser and shows in the demo dashboard.
 
 ## Calorie calculator
 

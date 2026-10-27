@@ -44,7 +44,7 @@
 
     /* stats */
     "Gym statistics (demo data)": "إحصائيات النادي (بيانات تجريبية)",
-    "Expert trainers": "مدربان خبيران", "Workout programs": "برنامج تدريبي", "Active members": "عضو نشط", "Weekly classes": "حصة أسبوعيًا",
+    "Expert trainers": "مدربًا خبيرًا", "Workout programs": "برنامج تدريبي", "Active members": "عضو نشط", "Weekly classes": "حصة أسبوعيًا",
     "Statistics shown are demo data for presentation purposes.": "الإحصائيات المعروضة بيانات تجريبية لأغراض العرض فقط.",
 
     /* why */
@@ -128,6 +128,44 @@
     "Now it's your turn. Press Start to begin your first set.": "دورك الآن. اضغط «ابدأ» لتبدأ أول مجموعة.",
     "Play Coach Karim's explanation": "تشغيل شرح الكابتن كريم", "Stop the explanation": "إيقاف الشرح",
     "Warm up first and stop if anything hurts. Timer and explanations are for demonstration only.": "سخّن جسمك أولًا وتوقف إذا شعرت بألم. المؤقت والشرح للعرض التجريبي فقط.",
+    /* copy changes: banner, footer, section texts */
+    "Portfolio demo — all names, prices and data are fictional.": "موقع تجريبي لمعرض الأعمال — جميع الأسماء والأسعار والبيانات خيالية.",
+    "Dismiss notice": "إغلاق الإشعار", "Premium training · Cairo, Egypt": "تدريب متميز · القاهرة، مصر", "Gym statistics": "إحصائيات النادي",
+    "General fitness information, not medical advice. Check with your doctor before starting a new routine.": "معلومات لياقة عامة وليست نصيحة طبية. استشر طبيبك قبل بدء روتين جديد.",
+    "General fitness information, not medical advice. Check with a doctor before starting a new routine.": "معلومات لياقة عامة وليست نصيحة طبية. استشر طبيبًا قبل بدء روتين جديد.",
+    "Meet some of our coaches.": "تعرّف على بعض مدربينا.",
+    "Flexible plans in Egyptian pounds (EGP). Pick the one that fits your routine.": "خطط مرنة بالجنيه المصري (EGP). اختر ما يناسب روتينك.",
+    "A selection from our weekly timetable. Filter by day or training type.": "مختارات من جدولنا الأسبوعي. صفِّ حسب اليوم أو نوع التمرين.",
+    "Routines that": "عادات", "stick": "تدوم", "What our members say.": "ماذا يقول أعضاؤنا.", "Member": "عضو",
+    "Estimate your daily calories and how to split them into protein, carbs and fat.": "قدّر سعراتك اليومية وكيف توزعها بين البروتين والكربوهيدرات والدهون.",
+    "Estimates only, not medical advice. Check with a doctor or dietitian before changing your diet.": "تقديرات فقط وليست نصيحة طبية. استشر طبيبًا أو أخصائي تغذية قبل تغيير نظامك الغذائي.",
+    "Quick answers about memberships, classes and training.": "إجابات سريعة عن الاشتراكات والحصص والتدريب.",
+    "Warm up first and stop if anything hurts.": "سخّن جسمك أولًا وتوقف إذا شعرت بألم.", "AI-generated video.": "فيديو مولَّد بالذكاء الاصطناعي.",
+    "This site stores your language choice and your recent enquiries only in your browser. It uses no tracking or advertising cookies.": "يحفظ هذا الموقع اختيار اللغة وآخر استفساراتك في متصفحك فقط. ولا يستخدم أي ملفات تعريف ارتباط للتتبع أو الإعلانات.",
+    /* contact details, WhatsApp lead forms */
+    "Questions about memberships, classes or personal training? Message us and we'll get back to you.": "عندك أسئلة عن الاشتراكات أو الحصص أو التدريب الشخصي؟ راسلنا وسنرد عليك.",
+    "12 Road 233, Degla, Maadi, Cairo, Egypt": "12 شارع 233، دجلة، المعادي، القاهرة، مصر",
+    "Instagram": "إنستغرام", "Facebook": "فيسبوك", "YouTube": "يوتيوب",
+    "Send on WhatsApp": "أرسل عبر واتساب", "Continue on WhatsApp": "تابع عبر واتساب", "Request on WhatsApp": "اطلب عبر واتساب",
+    "Your details are only used to answer your enquiry.": "نستخدم بياناتك للرد على استفسارك فقط.",
+    "Enter a valid Egyptian mobile number, like 01001234567.": "أدخل رقم موبايل مصريًا صحيحًا، مثل 01001234567.",
+    "Leave your name and mobile number and we'll continue on WhatsApp.": "اترك اسمك ورقم موبايلك وسنكمل معك على واتساب.",
+    "Choose a trainer, a day and a time, then send your request on WhatsApp.": "اختر مدربًا ويومًا وموعدًا ثم أرسل طلبك على واتساب.",
+    "Join this class": "انضم لهذه الحصة", "Leave your name and mobile number and we'll confirm your spot on WhatsApp.": "اترك اسمك ورقم موبايلك وسنؤكد لك مكانك على واتساب.",
+    "Your message is ready": "رسالتك جاهزة",
+    "WhatsApp should have opened with your details. Press Send to confirm with our team.": "يجب أن يكون واتساب قد فُتح ببياناتك. اضغط «إرسال» لتأكيدها مع فريقنا.",
+    "WhatsApp should have opened with your message. Press Send to confirm with our team.": "يجب أن يكون واتساب قد فُتح برسالتك. اضغط «إرسال» لتأكيدها مع فريقنا.",
+    "Your browser blocked the WhatsApp window. Tap the button below to open it.": "المتصفح منع نافذة واتساب. اضغط الزر أدناه لفتحها.",
+    "Your browser blocked the WhatsApp window.": "المتصفح منع نافذة واتساب.", "Open WhatsApp": "افتح واتساب", "Call us": "اتصل بنا",
+    "We can't open WhatsApp right now. Please call us instead.": "لا يمكننا فتح واتساب الآن. يرجى الاتصال بنا بدلًا من ذلك.",
+    "Hi, I'd like to know more about IRON HOUSE memberships": "مرحبًا، أود معرفة المزيد عن اشتراكات IRON HOUSE.",
+    "Press the button to load the map. Nothing is requested from OpenStreetMap until you do.": "اضغط الزر لتحميل الخريطة. لا يُطلب أي شيء من OpenStreetMap قبل ذلك.",
+    "Map showing the location of IRON HOUSE FITNESS": "خريطة تعرض موقع IRON HOUSE FITNESS",
+    /* privacy page */
+    "The membership, booking, class and contact forms ask for your name and mobile number, plus the plan, trainer, class or message you choose. When you submit, these details are placed in a WhatsApp message that opens on your device. It reaches the gym only when you press Send. We do not store the details on a server. A copy of your latest enquiries is kept in your own browser.": "تطلب نماذج الاشتراك والحجز والحصص والتواصل اسمك ورقم موبايلك، إضافة إلى الخطة أو المدرب أو الحصة أو الرسالة التي تختارها. عند الإرسال تُوضع هذه البيانات في رسالة واتساب تُفتح على جهازك، ولا تصل إلى النادي إلا عند ضغطك على «إرسال». لا نحفظ البيانات على خادم. وتُحفظ نسخة من آخر استفساراتك في متصفحك أنت.",
+    "The site stores your language choice, whether you closed the notices, and your recent enquiries in your browser's local storage. It uses no tracking or advertising cookies.": "يحفظ الموقع في التخزين المحلي لمتصفحك اختيار اللغة، وهل أغلقت الإشعارات، وآخر استفساراتك. ولا يستخدم أي ملفات تعريف ارتباط للتتبع أو الإعلانات.",
+    "To display the site, your browser loads photos from Unsplash. If you press Show map, the map is loaded from OpenStreetMap. When you continue on WhatsApp or press the WhatsApp button, you leave this site and WhatsApp's own privacy policy applies. These services may receive your IP address when they load.": "لعرض الموقع، يحمّل متصفحك الصور من Unsplash. وإذا ضغطت «عرض الخريطة» تُحمَّل الخريطة من OpenStreetMap. وعندما تتابع على واتساب أو تضغط زر واتساب فإنك تغادر هذا الموقع وتنطبق سياسة خصوصية واتساب. قد تستلم هذه الخدمات عنوان IP الخاص بك عند التحميل.",
+    "Questions about this policy:": "للاستفسار عن هذه السياسة:",
     /* calorie calculator */
     "Calorie calculator": "حاسبة السعرات", "Calorie Calculator": "حاسبة السعرات", "Know your": "اعرف", "numbers": "أرقامك",
     "Estimate how many calories you need each day and how to split them into protein, carbs and fat. A general estimate, not medical or nutrition advice.": "قدّر عدد السعرات التي تحتاجها يوميًا وكيف توزعها بين البروتين والكربوهيدرات والدهون. تقدير عام وليس نصيحة طبية أو غذائية.",
@@ -186,7 +224,7 @@
     "Browser storage and cookies": "التخزين في المتصفح وملفات تعريف الارتباط",
     "The site stores your language choice, whether you closed the storage notice, and the demo data you create (memberships, bookings and plan prices) in your browser's local storage. It uses no tracking or advertising cookies.": "يحفظ الموقع في التخزين المحلي لمتصفحك اختيار اللغة، وهل أغلقت إشعار التخزين، والبيانات التجريبية التي تنشئها (الاشتراكات والحجوزات وأسعار الخطط). ولا يستخدم أي ملفات تعريف ارتباط للتتبع أو الإعلانات.",
     "Third-party services": "الخدمات الخارجية",
-    "To display the site, your browser loads fonts from Google Fonts and photos from Unsplash. If you press Show map, the map is loaded from OpenStreetMap. If you press the WhatsApp button, you leave this site and WhatsApp's own privacy policy applies. These services may receive your IP address when they load.": "لعرض الموقع، يحمّل متصفحك الخطوط من Google Fonts والصور من Unsplash. وإذا ضغطت «عرض الخريطة» تُحمَّل الخريطة من OpenStreetMap. وإذا ضغطت زر واتساب فإنك تغادر هذا الموقع وتنطبق سياسة خصوصية واتساب. قد تستلم هذه الخدمات عنوان IP الخاص بك عند التحميل.",
+    "To display the site, your browser loads fonts from Google Fonts and photos from Unsplash. If you press Show map, the map is loaded from OpenStreetMap. If you press the WhatsApp button, you leave this site and WhatsApp's own privacy policy applies. These services may receive your IP address when they load.": "لعرض الموقع، يحمّل متصفحك الصور من Unsplash. وإذا ضغطت «عرض الخريطة» تُحمَّل الخريطة من OpenStreetMap. وإذا ضغطت زر واتساب فإنك تغادر هذا الموقع وتنطبق سياسة خصوصية واتساب. قد تستلم هذه الخدمات عنوان IP الخاص بك عند التحميل.",
     "Voice features": "ميزات الصوت",
     "The Listen buttons use your browser's built-in text-to-speech. The text is read aloud on your own device.": "تستخدم أزرار الاستماع خاصية القراءة الصوتية المدمجة في متصفحك. ويُقرأ النص بصوت عالٍ على جهازك أنت.",
     "Health information": "المعلومات الصحية",
@@ -195,8 +233,7 @@
     "You can delete all demo data at any time with Reset demo data in the dashboard, or by clearing this site's data in your browser settings.": "يمكنك حذف كل البيانات التجريبية في أي وقت عبر «إعادة ضبط البيانات التجريبية» في لوحة التحكم، أو بمسح بيانات هذا الموقع من إعدادات المتصفح.",
     "If this were a real gym": "لو كان هذا ناديًا حقيقيًا",
     "A real gym website must say who is responsible for the data, why each piece of data is collected, how long it is kept, who receives it, and how members can ask to see, correct or delete it. Complete these points with a lawyer before launch.": "يجب أن يوضح موقع النادي الحقيقي من المسؤول عن البيانات، ولماذا تُجمع كل بيانة، ومدة الاحتفاظ بها، ومن يستلمها، وكيف يطلب الأعضاء الاطلاع عليها أو تصحيحها أو حذفها. أكمل هذه النقاط مع محامٍ قبل الإطلاق.",
-    "Questions about this policy: privacy@your-gym.example (placeholder).": "للاستفسار عن هذه السياسة: privacy@your-gym.example (نص مؤقت).",
-    "Book trainer": "احجز المدرب",
+    "Level": "المستوى", "Book trainer": "احجز المدرب",
     "Book with a trainer": "احجز مع مدرب", "Request Booking": "طلب الحجز", "Trainer": "المدرب", "Session type": "نوع الجلسة", "Date": "التاريخ", "Available times": "الأوقات المتاحة",
     "Choose a trainer, a day and a time. This is a demo: no payment is taken and nothing is sent to the gym.": "اختر مدربًا ويومًا وموعدًا. هذا عرض تجريبي: لن يتم سحب أي مبلغ ولن يُرسل شيء إلى النادي.",
     "Personal training session (60 min)": "جلسة تدريب شخصي (60 دقيقة)", "Form & technique check (30 min)": "مراجعة الأداء والأسلوب (30 دقيقة)", "Free intro consultation (30 min)": "استشارة تعريفية مجانية (30 دقيقة)",
@@ -295,7 +332,6 @@
     "123 Example Street, Your City, Egypt": "123 شارع المثال، مدينتك، مصر",
     "Saturday – Thursday": "السبت – الخميس",
     "Social media": "وسائل التواصل الاجتماعي",
-    "Instagram (placeholder link)": "إنستغرام (رابط مؤقت)", "Facebook (placeholder link)": "فيسبوك (رابط مؤقت)", "YouTube (placeholder link)": "يوتيوب (رابط مؤقت)",
     "Send a message": "أرسل رسالة", "Message": "الرسالة", "Your name": "اسمك", "How can we help?": "كيف نساعدك؟", "Send Message": "إرسال الرسالة",
     "Demo form: messages are not sent anywhere because this site has no backend.": "نموذج تجريبي: لا تُرسل الرسائل إلى أي جهة لأن الموقع بلا خادم.",
 
@@ -365,6 +401,10 @@
     [/^(\d+) days?$/, (a) => `${a} يومًا`],
     [/^Day (\d)$/, (a) => `اليوم ${a}`],
     [/^Coach (.+)$/, (a) => `الكابتن ${T(a)}`],
+    [/^Showing (\d+) featured (?:program|programs)$/, (a) => `عرض ${a} برنامج مميز`],
+    [/^Showing (\d+) featured (?:class|classes)$/, (a) => `عرض ${a} حصة مميزة`],
+    [/^Portrait of coach (.+)$/, (a) => `صورة المدرب ${T(a)}`],
+    [/^Join (.+) on (\w+)$/, (a, d) => `انضم إلى ${T(a)} يوم ${T(d)}`],
     [/^([\d,]+) kcal$/, (a) => `${a} سعرة`],
     [/^(\d+) g$/, (a) => `${a} جم`],
     [/^Your target was raised to a safe minimum of ([\d,]+) kcal\.$/, (a) => `تم رفع هدفك إلى حد أدنى آمن قدره ${a} سعرة.`],
@@ -494,12 +534,6 @@
     try { localStorage.setItem(KEY, lang); } catch (e) { /* ignore */ }
     const root = document.documentElement;
     root.lang = lang; root.dir = lang === "ar" ? "rtl" : "ltr";
-    if (lang === "ar" && !document.getElementById("ar-font")) {
-      const l = document.createElement("link");
-      l.id = "ar-font"; l.rel = "stylesheet";
-      l.href = "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap";
-      document.head.appendChild(l);
-    }
     walk(document.body);
     applyTitle();
     if (metaDesc) metaDesc.content = lang === "ar" ? T(metaOrig) : metaOrig;

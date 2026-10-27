@@ -8,20 +8,19 @@
   <meta name="theme-color" content="#0a0a0a">
   <meta name="robots" content="noindex">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/rtl.css">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/barlow-condensed-800.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/barlow-condensed-700.woff2" crossorigin>
+  <link rel="stylesheet" href="css/dashboard.min.css">
+  <script>(function(d){try{if(localStorage.getItem("ironhouse.lang")==="ar"){d.lang="ar";d.dir="rtl";}}catch(e){}})(document.documentElement);</script>
 </head>
 <body>
   <a class="skip-link" href="#dash-main">Skip to main content</a>
   <div class="shell">
     <aside class="sidebar" id="sidebar" aria-label="Dashboard navigation">
-      <a href="index.html" class="wordmark" aria-label="IRON HOUSE FITNESS website">
+      <a href="index.html" class="wordmark">
         <svg class="wordmark-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 12v8M8 8v16M24 8v16M28 12v8M8 16h16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
-        <span>IRON HOUSE<small>ADMIN DEMO</small></span>
+        <span>IRON HOUSE <small>ADMIN DEMO</small></span>
       </a>
       <nav class="side-nav">
         <a href="#overview" data-view="overview"><i data-icon="dashboard"></i> Overview</a>
@@ -53,7 +52,7 @@
           <div class="grid-2">
             <article class="panel chart-panel">
               <div class="panel-head"><h2>Monthly revenue</h2><span class="muted">Fictional data · EGP</span></div>
-              <div id="chart" class="chart" role="img" aria-label="Bar chart of fictional monthly revenue for the last 12 months"></div>
+              <div id="chart" class="chart" role="group" aria-label="Bar chart of fictional monthly revenue for the last 12 months"></div>
             </article>
             <article class="panel">
               <div class="panel-head"><h2>Expiring soon</h2><span class="muted">Next 14 days</span></div>
@@ -105,9 +104,6 @@
     </div>
   </div>
 
-  <script src="js/data.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/i18n.js"></script>
-  <script src="js/dashboard.js"></script>
+  <script src="js/dashboard.min.js" defer></script>
 </body>
 </html>

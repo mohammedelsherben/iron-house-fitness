@@ -7,6 +7,8 @@
   const { $, $$, esc, icon, hydrateIcons, fmtNum, fmtEGP, fmtDate, fmtTime, toast, openModal, validateForm, liveClear } = UI;
 
   /* ---------- Reusable pieces ---------- */
+  /** srcset for an Unsplash URL at several widths (the URL carries w=<width>). */
+  const srcset = (url, widths) => widths.map((w) => `${url.replace(/w=\d+/, "w=" + w)} ${w}w`).join(", ");
   const levelClass = { Beginner: "lvl-beginner", Intermediate: "lvl-intermediate", Advanced: "lvl-advanced" };
   const levelBadge = (level) => `<span class="badge plain ${levelClass[level] || ""}">${esc(level)}</span>`;
   function chip(label, value, active, group) {
@@ -16,6 +18,35 @@
     return `<div class="empty"><div class="empty-icon">${icon("search")}</div><h3>${esc(title)}</h3><p>${esc(text)}</p>
       <button type="button" class="btn btn-ghost btn-sm" id="${resetId}">Clear filters</button></div>`;
   }
+
+  /* ---------- WhatsApp lead capture (no backend: the visitor's details go into a ready WhatsApp message) ---------- */
+  const lang = () => (I18N.getLang() === "ar" ? "ar" : "en");
+  const tr = (en, ar) => (lang() === "ar" ? ar : en);
+  const loc = (s) => (lang() === "ar" ? I18N.translate(s) || s : s); // translate a value (plan name, date, class...) into the page language
+  const WA_DEFAULT_MESSAGE = "Hi, I'd like to know more about IRON HOUSE memberships";
+
+  /** Opens WhatsApp with the message. status: "opened", "blocked" (pop-up blocker) or "unconfigured" (no number in js/config.js). */
+  function openWhatsApp(text) {
+    const url = UI.waLink(text);
+    if (!url) return { status: "unconfigured", url: "" };
+    const w = window.open(url, "_blank");
+    if (w) { try { w.opener = null; } catch (e) { /* ignore */ } }
+    return { status: w ? "opened" : "blocked", url };
+  }
+  /** What the modal shows after a lead form is submitted: success, "open it manually", or an error with a phone number. */
+  function leadResultHTML(result, title) {
+    const phone = String((window.IH_CONFIG || {}).phone || "");
+    if (result.status === "unconfigured") {
+      return `<div class="alert alert-error">${icon("alert")}<span>We can't open WhatsApp right now. Please call us instead.</span></div>
+        <div class="modal-actions">${phone ? `<a class="btn btn-primary" href="tel:${esc(phone.replace(/[^\d+]/g, ""))}">${icon("phone")} Call us</a>` : ""}<button type="button" class="btn btn-ghost" data-done>Close</button></div>`;
+    }
+    return `<div class="success"><div class="success-icon">${icon("check")}</div><h3>${esc(title)}</h3>
+      <p>${result.status === "opened" ? "WhatsApp should have opened with your details. Press Send to confirm with our team." : "Your browser blocked the WhatsApp window. Tap the button below to open it."}</p>
+      <div class="modal-actions"><a class="btn btn-primary" href="${esc(result.url)}" target="_blank" rel="noopener noreferrer">${icon("whatsapp")} Open WhatsApp</a><button type="button" class="btn btn-ghost" data-done>Close</button></div></div>`;
+  }
+  const wireDone = (m) => { const d = $("[data-done]", m.el); if (d) d.addEventListener("click", m.close); };
+  /** Keeps a copy of the enquiry in this browser so it shows up in the dashboard. Never blocks the WhatsApp flow. */
+  const keepCopy = (fn) => { try { fn(); } catch (e) { /* storage blocked: ignore */ } };
 
   /* ---------- Header / navigation ---------- */
   const header = $(".site-header");
@@ -65,7 +96,7 @@
     const list = IH.PROGRAMS.filter((p) =>
       (programState.cat === "all" || p.category === programState.cat) &&
       (programState.level === "all" || p.level === programState.level));
-    $("#program-count").textContent = `Showing ${list.length} of ${IH.PROGRAMS.length} demo programs`;
+    $("#program-count").textContent = `Showing ${list.length} featured ${list.length === 1 ? "program" : "programs"}`;
     const grid = $("#program-grid");
     if (!list.length) {
       grid.innerHTML = emptyState("No programs match", "Try a different category or difficulty level.", "program-reset");
@@ -74,7 +105,7 @@
     }
     grid.innerHTML = list.map((p) => `
       <article class="card program-card">
-        <div class="card-media"><img src="${p.image}" alt="${esc(p.name)} training session" loading="lazy" width="700" height="460">
+        <div class="card-media"><img src="${p.image}" srcset="${srcset(p.image, [400, 700, 1000])}" sizes="(max-width: 600px) 92vw, 380px" alt="${esc(p.name)} training session" loading="lazy" decoding="async" width="700" height="460">
           <span class="card-tag">${esc(catLabel[p.category])}</span></div>
         <div class="card-body">
           <div class="card-top"><h3>${esc(p.name)}</h3>${levelBadge(p.level)}</div>
@@ -84,7 +115,7 @@
             <li>${icon("zap")} ${p.perWeek}× / week</li>
             <li>${icon("clock")} ${esc(p.session)}</li>
           </ul>
-          <button type="button" class="btn btn-ghost btn-sm" data-program="${p.id}">View details ${icon("arrow-right")}</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-program="${p.id}">View details<span class="sr-only"> ${esc(p.name)}</span> ${icon("arrow-right")}</button>
         </div>
       </article>`).join("");
   }
@@ -111,7 +142,7 @@
     openModal({
       title: p.name, wide: true,
       html: `
-        <div class="modal-badges">${levelBadge(p.level)}<span class="badge plain">${esc(catLabel[p.category])}</span><span class="badge badge-demo">Demo content</span></div>
+        <div class="modal-badges">${levelBadge(p.level)}<span class="badge plain">${esc(catLabel[p.category])}</span></div>
         <p class="modal-text">${esc(p.overview)}</p>
         <div class="detail-stats">
           <div><strong>${p.weeks}</strong><span>weeks</span></div>
@@ -122,10 +153,9 @@
         <h3 class="modal-sub">Sample week</h3>
         <table class="week-table"><tbody>${p.week.map(([d, f]) => `<tr><th scope="row">${esc(d)}</th><td>${esc(f)}</td></tr>`).join("")}</tbody></table>
         <p class="modal-text"><strong>Equipment:</strong> ${esc(p.equipment)}</p>
-        <div class="alert">${icon("info")}<span>General fitness information for demonstration only. It is not individualized medical or professional advice. Check with a qualified professional before starting a new exercise program.</span></div>
-        <div class="modal-actions"><a href="#plans" class="btn btn-primary" data-close>Join to start this program ${icon("arrow-right")}</a></div>`,
+        <div class="alert">${icon("info")}<span>General fitness information, not medical advice. Check with a doctor before starting a new routine.</span></div>
+        <div class="modal-actions"><button type="button" class="btn btn-primary" data-join data-join-for="${esc(p.name)}">Join to start this program ${icon("arrow-right")}</button></div>`,
       onOpen(m) {
-        m.el.querySelector("[data-close]").addEventListener("click", () => m.close());
         wireExercises(m.el, id);
       },
     });
@@ -156,10 +186,10 @@
   I18N.add(Object.fromEntries(Object.values(MUSCLE_GUIDE)));
 
   // small badge on every illustration: the athlete shown is Coach Karim himself
-  const coachTag = (text) => `<span class="coach-tag"><img src="${coach.image}" alt="" width="22" height="22">${esc(text)}</span>`;
+  const coachTag = (text) => `<span class="coach-tag"><img src="${coach.image.replace(/w=\d+/, "w=64")}" alt="" width="22" height="22" decoding="async">${esc(text)}</span>`;
   function coachCard(message, label) {
     return `<div class="coach">
-      <img class="coach-avatar" src="${coach.image}" alt="Coach ${esc(coach.name)}" width="64" height="64">
+      <img class="coach-avatar" src="${coach.image.replace(/w=\d+/, "w=160")}" alt="Coach ${esc(coach.name)}" width="64" height="64" decoding="async">
       <div class="coach-body">
         ${label ? `<p class="pl-label">${esc(label)}</p>` : ""}
         <p class="coach-name"><strong>Coach ${esc(coach.name)}</strong><span>${esc(coach.specialty)}</span></p>
@@ -215,8 +245,7 @@
       <div class="chips ex-chips" role="group" aria-label="Filter exercises by muscle">
         ${chip("All muscles", "all", true, "muscle")}${IH.MUSCLES.map((m) => chip(m.label, m.id, false, "muscle")).join("")}
       </div>
-      <div class="ex-grid" id="ex-grid"></div>
-      <p class="ex-note">Demo content: general information, not exact technique instructions.</p>`;
+      <div class="ex-grid" id="ex-grid"></div>`;
   }
   function wireExercises(root, programId) {
     const grid = $("#ex-grid", root);
@@ -226,13 +255,13 @@
       grid.innerHTML = list.filter(({ id }) => muscle === "all" || IH.EXERCISES[id].muscle === muscle).map(({ id, setsText }, i) => {
         const ex = IH.EXERCISES[id];
         return `<figure class="ex-card">
-          <button type="button" class="ex-thumb" data-start="${id}" aria-label="${esc(ex.name)}">
-            <img src="${SCENE}" style="object-position:${THUMB_POS[i % THUMB_POS.length]}" alt="" loading="lazy" width="400" height="250">
+          <button type="button" class="ex-thumb" data-start="${id}" aria-hidden="true" tabindex="-1">
+            <img src="${SCENE}" srcset="${srcset(SCENE, [480, 720, 900])}" sizes="(max-width: 560px) 90vw, 240px" style="object-position:${THUMB_POS[i % THUMB_POS.length]}" alt="" loading="lazy" decoding="async" width="400" height="250">
             ${coachTag("Coach Karim")}<span class="ex-thumb-play">${icon("play")}</span>
           </button>
           <figcaption><strong>${esc(ex.name)}</strong><span class="ex-muscle">${esc(muscleLabel[ex.muscle])}</span>
           <span class="ex-sets">${esc(setsText)}</span>
-          <button type="button" class="btn btn-primary btn-sm" data-start="${id}">Start exercise</button></figcaption></figure>`;
+          <button type="button" class="btn btn-primary btn-sm" data-start="${id}">Start exercise<span class="sr-only"> ${esc(ex.name)}</span></button></figcaption></figure>`;
       }).join("");
     }
     draw("all");
@@ -279,12 +308,12 @@
       <div class="video-wrap" data-video-panel hidden>
         <video data-ai-video src="assets/exercises/${exId}.mp4" poster="${sceneImg}" controls playsinline preload="metadata"></video>
       </div>
-      <p class="ex-note video-credit" data-video-panel hidden>AI-generated video for demonstration. It does not show a real person.</p>`;
+      <p class="ex-note video-credit" data-video-panel hidden>AI-generated video.</p>`;
     const tabs = `<div class="chips stage-tabs" role="group" aria-label="Choose how to learn" hidden>
       <button type="button" class="chip" data-tab="video" aria-pressed="false">Watch the AI video</button>
       <button type="button" class="chip" data-tab="coach" aria-pressed="true">Coach Karim explains</button></div>`;
     const stageHTML = `<div class="stage" data-stage>
-          <img class="stage-bg" src="${sceneImg}" alt="Coach Karim Hassan in the gym" width="900" height="600">
+          <img class="stage-bg" src="${sceneImg}" ${sceneImg === SCENE ? `srcset="${srcset(SCENE, [480, 720, 900])}" sizes="(max-width: 760px) 90vw, 360px"` : ""} alt="Coach Karim Hassan in the gym" width="900" height="600" decoding="async">
           <div class="stage-top">${coachTag("Coach Karim")}<span class="stage-live"><i></i>In the gym</span>
             <span class="stage-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
           <p class="stage-caption" data-caption aria-live="polite">Press play and Coach Karim will explain this exercise in the gym.</p>
@@ -321,7 +350,7 @@
             <ol class="pl-steps">${info.steps.map((s, i) => `<li><span class="step-text">${esc(s[0])}</span>
               <button type="button" class="step-listen" data-step="${i}" aria-label="Listen to this step">${icon("volume")}</button></li>`).join("")}</ol>
             <div class="alert">${icon("info")}<span><strong>Coach Karim's tip</strong> ${esc(info.tip[0])}</span></div>
-            <p class="ex-note">Warm up first and stop if anything hurts. Timer and explanations are for demonstration only.</p>
+            <p class="ex-note">Warm up first and stop if anything hurts.</p>
           </div>
         </div>`,
     });
@@ -448,17 +477,29 @@
   }
 
   /* ---------- Trainers ---------- */
+  function renderTrainers() {
   $("#trainer-grid").innerHTML = IH.TRAINERS.map((t) => `
     <article class="card trainer-card reveal">
-      <div class="trainer-photo"><img src="${t.image}" alt="Portrait-style photo of demo trainer ${esc(t.name)}" loading="lazy" width="600" height="750"></div>
+      <div class="trainer-photo"><img src="${t.image}" srcset="${srcset(t.image, [400, 600, 800])}" sizes="(max-width: 560px) 92vw, 380px" alt="Portrait of coach ${esc(t.name)}" loading="lazy" decoding="async" width="600" height="750"></div>
       <div class="card-body">
         <h3>${esc(t.name)}</h3>
         <p class="trainer-spec">${esc(t.specialty)}</p>
         <p>${esc(t.bio)}</p>
         <span class="badge plain">${t.years} years experience</span>
-        <button type="button" class="btn btn-primary btn-sm trainer-book" data-book="${t.id}">Book with a trainer</button>
+        <button type="button" class="btn btn-primary btn-sm trainer-book" data-book="${t.id}">Book with a trainer<span class="sr-only"> ${esc(t.name)}</span></button>
       </div>
     </article>`).join("");
+  }
+
+  /* Render a below-the-fold grid only when the visitor scrolls near it (keeps the first load light) */
+  function renderWhenNear(selector, render) {
+    const el = $(selector);
+    if (!("IntersectionObserver" in window) || location.hash) { render(); return; }
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { io.disconnect(); render(); }
+    }, { rootMargin: "700px 0px" });
+    io.observe(el);
+  }
 
   /* ---------- Book a session with a trainer ---------- */
   const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -477,7 +518,7 @@
     openModal({
       title: "Book with a trainer",
       html: `
-        <p class="modal-text">Choose a trainer, a day and a time. This is a demo: no payment is taken and nothing is sent to the gym.</p>
+        <p class="modal-text">Choose a trainer, a day and a time, then send your request on WhatsApp.</p>
         <form id="book-form" novalidate>
           <div class="form-row">
             <div class="field"><label for="b-trainer">Trainer</label>
@@ -489,13 +530,12 @@
             <input class="input" id="b-date" type="date" min="${IH.isoDay(today)}" max="${IH.isoDay(last)}" data-rule="required"><div class="field-error" role="alert"></div></div>
           <div class="field"><span class="label" id="b-times-label">Available times</span>
             <div class="slots" id="b-slots" role="group" aria-labelledby="b-times-label"></div><div class="field-error" id="b-time-error" role="alert"></div></div>
-          <div class="field"><label for="b-name">Full name</label><input class="input" id="b-name" autocomplete="name" data-rule="name"><div class="field-error" role="alert"></div></div>
           <div class="form-row">
-            <div class="field"><label for="b-email">Email</label><input class="input" id="b-email" type="email" autocomplete="email" data-rule="email" placeholder="you@example.com"><div class="field-error" role="alert"></div></div>
-            <div class="field"><label for="b-phone">Phone number</label><input class="input" id="b-phone" type="tel" autocomplete="tel" data-rule="phone" placeholder="+20 100 000 0000"><div class="field-error" role="alert"></div></div>
+            <div class="field"><label for="b-name">Full name</label><input class="input" id="b-name" autocomplete="name" data-rule="name"><div class="field-error" role="alert"></div></div>
+            <div class="field"><label for="b-phone">Phone number</label><input class="input" id="b-phone" type="tel" inputmode="tel" autocomplete="tel" data-rule="phone" placeholder="01001234567"><div class="field-error" role="alert"></div></div>
           </div>
-          <button class="btn btn-primary btn-block" type="submit">Request Booking ${icon("arrow-right")}</button>
-          <p class="form-note">Details are stored only in this browser (localStorage) so you can see them in the dashboard demo.</p>
+          <button class="btn btn-primary btn-block" type="submit">${icon("whatsapp")} Request on WhatsApp</button>
+          <p class="form-note">Your details are only used to answer your enquiry.</p>
         </form>`,
       onOpen(m) {
         const form = $("#book-form", m.el), slotsBox = $("#b-slots", m.el), timeError = $("#b-time-error", m.el);
@@ -539,19 +579,19 @@
           if (dateStr && !chosen) { timeError.textContent = "Choose a time."; ok = false; if (!$$(".has-error", form).length) $(".slot:not([disabled])", slotsBox)?.focus(); }
           if (!ok) return;
           const trainer = IH.TRAINERS.find((t) => t.id === $("#b-trainer", m.el).value);
-          const name = $("#b-name", m.el).value.trim();
-          let saved = true;
-          try {
-            IH.addBooking({ trainerId: trainer.id, trainerName: trainer.name, type: $("#b-type", m.el).value, date: dateStr, time: chosen, name, email: $("#b-email", m.el).value.trim(), phone: $("#b-phone", m.el).value.trim() });
-          } catch (err) { saved = false; }
-          m.setBody(saved
-            ? `<div class="success"><div class="success-icon">${icon("check")}</div>
-                 <h3>Booking requested!</h3>
-                 <p>Your session with ${esc(trainer.name)} on ${esc(fmtDate(IH.parseDay(dateStr)))} at ${esc(fmtTime(chosen))} was saved as a demo request. No payment was taken and no confirmation was sent.</p>
-                 <div class="modal-actions"><a class="btn btn-primary" href="dashboard.html#bookings">See it in the dashboard demo ${icon("arrow-right")}</a><button type="button" class="btn btn-ghost" data-done>Close</button></div></div>`
-            : `<div class="alert alert-error">${icon("alert")}<span>Your browser blocked local storage, so the demo booking could not be saved. Please allow site data and try again.</span></div>
-               <div class="modal-actions"><button type="button" class="btn btn-ghost" data-done>Close</button></div>`);
-          const done = $("[data-done]", m.el); if (done) done.addEventListener("click", m.close);
+          const name = $("#b-name", m.el).value.trim(), phone = UI.normalizeEgyptPhone($("#b-phone", m.el).value);
+          const type = $("#b-type", m.el).value, dateText = fmtDate(IH.parseDay(dateStr)), timeText = fmtTime(chosen);
+          keepCopy(() => IH.addBooking({ trainerId: trainer.id, trainerName: trainer.name, type, date: dateStr, time: chosen, name, email: "", phone }));
+          const text = [
+            tr(`Hi IRON HOUSE FITNESS, I'd like to book a session with ${trainer.name}.`, `مرحبًا IRON HOUSE FITNESS، أود حجز جلسة مع ${loc(trainer.name)}.`),
+            `${tr("Session", "الجلسة")}: ${loc(type)}`,
+            `${tr("Date", "التاريخ")}: ${loc(dateText)}`,
+            `${tr("Time", "الوقت")}: ${loc(timeText)}`,
+            `${tr("Name", "الاسم")}: ${name}`,
+            `${tr("Phone", "الهاتف")}: ${phone}`,
+          ].join("\n");
+          m.setBody(leadResultHTML(openWhatsApp(text), "Your message is ready"));
+          wireDone(m);
         });
       },
     });
@@ -567,9 +607,8 @@
         <h3>${esc(p.name)}</h3>
         <p class="plan-price"><strong>${fmtNum(p.price)}</strong> <span>EGP</span></p>
         <p class="plan-sub">${esc(p.durationLabel)}${months > 1 ? ` · about ${fmtNum(Math.round(p.price / months))} EGP / month` : ""}</p>
-        <p class="plan-demo">Demo price</p>
         <ul class="perks">${p.perks.map((x) => `<li>${icon("check")}<span>${esc(x)}</span></li>`).join("")}</ul>
-        <button type="button" class="btn ${p.tag === "Most popular" ? "btn-primary" : "btn-ghost"} btn-block" data-plan="${p.id}">Choose Plan</button>
+        <button type="button" class="btn ${p.tag === "Most popular" ? "btn-primary" : "btn-ghost"} btn-block" data-plan="${p.id}">Choose Plan<span class="sr-only"> ${esc(p.name)}</span></button>
       </article>`;
     }).join("");
     observeReveal();
@@ -578,20 +617,22 @@
     const b = e.target.closest("[data-plan]"); if (b) openRegistration(b.dataset.plan);
   });
 
-  function openRegistration(planId) {
-    const plans = IH.getPlans();
-    const options = plans.map((p) => `<option value="${p.id}" ${p.id === planId ? "selected" : ""}>${esc(p.name)} · ${fmtEGP(p.price)} (${esc(p.durationLabel)})</option>`).join("");
+  /** Join / Choose plan: name + mobile + plan, then a ready WhatsApp message. `opts.program` adds the program the visitor was looking at. */
+  function openRegistration(planId, opts) {
+    const plans = IH.getPlans(), program = (opts && opts.program) || "";
+    const selected = planId || (plans.find((p) => p.tag === "Most popular") || plans[0]).id;
+    const options = plans.map((p) => `<option value="${p.id}" ${p.id === selected ? "selected" : ""}>${esc(p.name)} · ${fmtEGP(p.price)} (${esc(p.durationLabel)})</option>`).join("");
     openModal({
       title: "Join IRON HOUSE",
       html: `
-        <p class="modal-text">Register your interest in a plan. This is a demo: no payment is taken and no real membership is created.</p>
+        <p class="modal-text">Leave your name and mobile number and we'll continue on WhatsApp.</p>
+        ${program ? `<p class="modal-text"><strong>${esc(program)}</strong></p>` : ""}
         <form id="reg-form" novalidate>
           <div class="field"><label for="r-name">Full name</label><input class="input" id="r-name" name="name" autocomplete="name" data-rule="name" placeholder="e.g. Sara Ali"><div class="field-error" role="alert"></div></div>
-          <div class="field"><label for="r-email">Email</label><input class="input" id="r-email" name="email" type="email" autocomplete="email" data-rule="email" placeholder="you@example.com"><div class="field-error" role="alert"></div></div>
-          <div class="field"><label for="r-phone">Phone number</label><input class="input" id="r-phone" name="phone" type="tel" autocomplete="tel" data-rule="phone" placeholder="+20 100 000 0000"><div class="field-error" role="alert"></div></div>
+          <div class="field"><label for="r-phone">Phone number</label><input class="input" id="r-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" data-rule="phone" placeholder="01001234567"><div class="field-error" role="alert"></div></div>
           <div class="field"><label for="r-plan">Selected membership plan</label><select class="select" id="r-plan" name="plan" data-rule="required">${options}</select><div class="field-error" role="alert"></div></div>
-          <button class="btn btn-primary btn-block" type="submit">Submit Registration ${icon("arrow-right")}</button>
-          <p class="form-note">Details are stored only in this browser (localStorage) so you can see them in the dashboard demo.</p>
+          <button class="btn btn-primary btn-block" type="submit">${icon("whatsapp")} Continue on WhatsApp</button>
+          <p class="form-note">Your details are only used to answer your enquiry.</p>
         </form>`,
       onOpen(m) {
         const form = $("#reg-form", m.el);
@@ -600,21 +641,53 @@
           e.preventDefault();
           if (!validateForm(form)) return;
           const data = Object.fromEntries(new FormData(form));
-          const plan = plans.find((p) => p.id === data.plan);
-          let ok = true;
-          try {
-            IH.addMember({ name: data.name.trim(), email: data.email.trim(), phone: data.phone.trim(), plan: data.plan, status: "Pending" });
-          } catch (err) { ok = false; }
-          m.setBody(ok
-            ? `<div class="success">
-                 <div class="success-icon">${icon("check")}</div>
-                 <h3>Thank you, ${esc(data.name.trim().split(" ")[0])}!</h3>
-                 <p>Your <strong>${esc(plan.name)}</strong> registration request was recorded as a <strong>demo entry</strong> in this browser. No payment was taken and no membership has been purchased.</p>
-                 <div class="modal-actions"><a class="btn btn-primary" href="dashboard.html#members">See it in the dashboard demo ${icon("arrow-right")}</a><button type="button" class="btn btn-ghost" data-done>Close</button></div>
-               </div>`
-            : `<div class="alert alert-error">${icon("alert")}<span>Your browser blocked local storage, so the demo entry could not be saved. Please allow site data and try again.</span></div>
-               <div class="modal-actions"><button type="button" class="btn btn-ghost" data-done>Close</button></div>`);
-          const done = $("[data-done]", m.el); if (done) done.addEventListener("click", m.close);
+          const plan = plans.find((p) => p.id === data.plan), name = data.name.trim(), phone = UI.normalizeEgyptPhone(data.phone);
+          keepCopy(() => IH.addMember({ name, email: "", phone, plan: data.plan, status: "Pending" }));
+          const planLine = `${loc(plan.name)} (${loc(`${fmtEGP(plan.price)} · ${plan.durationLabel}`)})`;
+          const text = [
+            tr("Hi IRON HOUSE FITNESS, I'd like to join.", "مرحبًا IRON HOUSE FITNESS، أود الاشتراك."),
+            `${tr("Name", "الاسم")}: ${name}`,
+            `${tr("Phone", "الهاتف")}: ${phone}`,
+            `${tr("Plan", "الخطة")}: ${planLine}`,
+          ].concat(program ? [`${tr("Program", "البرنامج")}: ${loc(program)}`] : []).join("\n");
+          m.setBody(leadResultHTML(openWhatsApp(text), "Your message is ready"));
+          wireDone(m);
+        });
+      },
+    });
+  }
+
+  /** "Join" on a class card: name + mobile, then a WhatsApp message asking for a spot in that class. */
+  function openJoinClass(index) {
+    const c = IH.CLASSES[index]; if (!c) return;
+    openModal({
+      title: "Join this class",
+      html: `
+        <p class="modal-text"><strong>${esc(c.name)}</strong><br><span>${esc(c.day)} · ${esc(fmtTime(c.time))} · ${esc(c.trainer)}</span></p>
+        <p class="modal-text">Leave your name and mobile number and we'll confirm your spot on WhatsApp.</p>
+        <form id="jc-form" novalidate>
+          <div class="field"><label for="j-name">Full name</label><input class="input" id="j-name" autocomplete="name" data-rule="name" placeholder="e.g. Sara Ali"><div class="field-error" role="alert"></div></div>
+          <div class="field"><label for="j-phone">Phone number</label><input class="input" id="j-phone" type="tel" inputmode="tel" autocomplete="tel" data-rule="phone" placeholder="01001234567"><div class="field-error" role="alert"></div></div>
+          <button class="btn btn-primary btn-block" type="submit">${icon("whatsapp")} Continue on WhatsApp</button>
+          <p class="form-note">Your details are only used to answer your enquiry.</p>
+        </form>`,
+      onOpen(m) {
+        const form = $("#jc-form", m.el);
+        liveClear(form);
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          if (!validateForm(form)) return;
+          const name = $("#j-name", m.el).value.trim(), phone = UI.normalizeEgyptPhone($("#j-phone", m.el).value);
+          const when = `${loc(c.day)} · ${loc(fmtTime(c.time))}`;
+          const text = [
+            tr(`Hi IRON HOUSE FITNESS, I'd like to join the class "${c.name}".`, `مرحبًا IRON HOUSE FITNESS، أود الانضمام إلى حصة "${loc(c.name)}".`),
+            `${tr("Class", "الحصة")}: ${loc(c.name)} · ${when}`,
+            `${tr("Coach", "المدرب")}: ${loc(c.trainer)}`,
+            `${tr("Name", "الاسم")}: ${name}`,
+            `${tr("Phone", "الهاتف")}: ${phone}`,
+          ].join("\n");
+          m.setBody(leadResultHTML(openWhatsApp(text), "Your message is ready"));
+          wireDone(m);
         });
       },
     });
@@ -629,7 +702,7 @@
     const list = IH.CLASSES
       .filter((c) => (classState.day === "all" || c.day === classState.day) && (classState.type === "all" || c.type === classState.type))
       .sort((a, b) => IH.DAYS.indexOf(a.day) - IH.DAYS.indexOf(b.day) || a.time.localeCompare(b.time));
-    $("#class-count").textContent = `${list.length} ${list.length === 1 ? "class" : "classes"} found`;
+    $("#class-count").textContent = `Showing ${list.length} featured ${list.length === 1 ? "class" : "classes"}`;
     const grid = $("#class-grid");
     if (!list.length) {
       grid.innerHTML = emptyState("No classes found", "There are no classes for that day and type. Try another combination.", "class-reset");
@@ -647,13 +720,15 @@
           <div class="class-tags"><span class="badge plain">${esc(c.type)}</span>${levelBadge(c.level)}</div>
         </div>
         <div class="class-actions">
-          <a class="btn btn-ghost btn-sm" href="#plans" aria-label="Join ${esc(c.name)} on ${esc(c.day)}: see membership plans">Join</a>
-          <button type="button" class="btn btn-primary btn-sm" data-book-class="${esc(c.trainer)}" data-day="${esc(c.day)}" aria-label="Book a session with ${esc(c.trainer)}">Book trainer</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-join-class="${IH.CLASSES.indexOf(c)}">Join<span class="sr-only"> ${esc(c.name)}</span></button>
+          <button type="button" class="btn btn-primary btn-sm" data-book-class="${esc(c.trainer)}" data-day="${esc(c.day)}">Book trainer<span class="sr-only"> ${esc(c.trainer)}</span></button>
         </div>
       </article>`).join("");
   }
-  $("#class-grid").addEventListener("click", (e) => { // "Book trainer" on a class card opens the booking with that class's trainer
-    const b = e.target.closest("[data-book-class]"); if (!b) return;
+  $("#class-grid").addEventListener("click", (e) => {
+    const join = e.target.closest("[data-join-class]"); // "Join": ask for a spot in that class
+    if (join) { openJoinClass(Number(join.dataset.joinClass)); return; }
+    const b = e.target.closest("[data-book-class]"); if (!b) return; // "Book trainer": open the booking with that class's trainer
     const trainer = IH.TRAINERS.find((t) => t.name === b.dataset.bookClass);
     if (trainer) openBooking(trainer.id, b.dataset.day);
   });
@@ -663,7 +738,7 @@
   /* ---------- Testimonials ---------- */
   $("#testi-grid").innerHTML = IH.TESTIMONIALS.map((t) => `
     <figure class="testi reveal">
-      <div class="stars" aria-label="5 out of 5 stars">${icon("star").repeat(5)}</div>
+      <div class="stars"><span class="sr-only">5 out of 5 stars</span>${icon("star").repeat(5)}</div>
       <blockquote>“${esc(t.quote)}”</blockquote>
       <figcaption><span class="avatar" aria-hidden="true">${esc(t.name[0])}</span><div><strong>${esc(t.name)}</strong><span>${esc(t.role)}</span></div></figcaption>
     </figure>`).join("");
@@ -675,9 +750,18 @@
     e.preventDefault();
     const out = $("#contact-result");
     if (!validateForm(cform)) { out.innerHTML = ""; return; }
-    const first = $("#c-name").value.trim().split(" ")[0];
+    const name = $("#c-name").value.trim(), phone = UI.normalizeEgyptPhone($("#c-phone").value), message = $("#c-message").value.trim();
+    const text = [tr("Hi IRON HOUSE FITNESS,", "مرحبًا IRON HOUSE FITNESS،"), message, "", `${tr("Name", "الاسم")}: ${name}`, `${tr("Phone", "الهاتف")}: ${phone}`].join("\n");
+    const result = openWhatsApp(text);
+    if (result.status === "unconfigured") {
+      const tel = String((window.IH_CONFIG || {}).phone || "");
+      out.innerHTML = `<div class="alert alert-error">${icon("alert")}<span>We can't open WhatsApp right now. Please call us instead.${tel ? ` <a class="notice-link" href="tel:${esc(tel.replace(/[^\d+]/g, ""))}">${esc(tel)}</a>` : ""}</span></div>`;
+      return;
+    }
     cform.reset();
-    out.innerHTML = `<div class="alert alert-success">${icon("check")}<span>Thanks, ${esc(first)}! This is a demo form, so your message was not actually sent. In a real deployment it would go to the gym's inbox.</span></div>`;
+    out.innerHTML = `<div class="alert alert-success">${icon("check")}<span>${result.status === "opened"
+      ? "WhatsApp should have opened with your message. Press Send to confirm with our team."
+      : `Your browser blocked the WhatsApp window. <a class="notice-link" href="${esc(result.url)}" target="_blank" rel="noopener noreferrer">Open WhatsApp</a>`}</span></div>`;
   });
 
   /* ---------- Scroll reveal + counters ---------- */
@@ -769,23 +853,46 @@
   });
   $("#calc-result").addEventListener("click", (e) => { if (e.target.closest("[data-calc-book]")) openBooking(IH.TRAINERS[0].id); });
 
-  /* ---------- WhatsApp button, click-to-load map, storage notice ---------- */
-  $("#wa-btn").addEventListener("click", (e) => {
+  /* ---------- Site settings (js/config.js), WhatsApp button, join buttons, map, notices ---------- */
+  UI.applyConfig();
+
+  // Floating WhatsApp button: https://wa.me/<number>?text=<message>. Hidden when no number is configured.
+  const waBtn = $("#wa-btn");
+  const setWaHref = () => { const url = UI.waLink(loc(WA_DEFAULT_MESSAGE)); if (url) waBtn.href = url; else waBtn.hidden = true; };
+  setWaHref();
+  waBtn.addEventListener("click", (e) => { e.preventDefault(); setWaHref(); const r = openWhatsApp(loc(WA_DEFAULT_MESSAGE)); if (r.status === "blocked") location.href = r.url; });
+  const langBtn = $("#lang-toggle"); if (langBtn) langBtn.addEventListener("click", setWaHref);
+
+  // Every Join / Start / Choose-a-plan button collects name + mobile first, then continues on WhatsApp
+  document.addEventListener("click", (e) => {
+    const j = e.target.closest("[data-join]"); if (!j) return;
     e.preventDefault();
-    const msg = "Hello IRON HOUSE FITNESS! I would like to know more about memberships.";
-    const text = I18N.getLang() === "ar" ? I18N.translate(msg) || msg : msg;
-    const number = String(IH.SITE.whatsapp || "").replace(/\D/g, "");
-    window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+    openRegistration(j.dataset.plan, { program: j.dataset.joinFor });
   });
-  $("#map-load").addEventListener("click", () => { // the map (OpenStreetMap) is only requested after the visitor asks for it
-    $("#map-card").innerHTML = `<iframe title="Map showing an example location in Cairo" loading="lazy" referrerpolicy="no-referrer"
-      src="https://www.openstreetmap.org/export/embed.html?bbox=31.2257%2C30.0394%2C31.2457%2C30.0494&amp;layer=mapnik&amp;marker=30.0444%2C31.2357"></iframe>`;
+
+  // Map and Google Maps link use the coordinates from the config. The map is only requested after the visitor asks for it.
+  const cfg = window.IH_CONFIG || {};
+  if (cfg.mapLat && cfg.mapLng) $("#map-gmaps").href = `https://www.google.com/maps/search/?api=1&query=${cfg.mapLat},${cfg.mapLng}`;
+  else { $("#map-gmaps").hidden = true; $("#map-load").hidden = true; }
+  $("#map-load").addEventListener("click", () => {
+    const d = 0.01, lat = Number(cfg.mapLat), lng = Number(cfg.mapLng);
+    const bbox = [lng - d, lat - d, lng + d, lat + d].join("%2C");
+    $("#map-card").innerHTML = `<iframe title="Map showing the location of IRON HOUSE FITNESS" loading="lazy" referrerpolicy="no-referrer"
+      src="https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&amp;layer=mapnik&amp;marker=${lat}%2C${lng}"></iframe>`;
   });
+
+  // The slim top banner can be dismissed (remembered in this browser)
+  const demoBar = $("#demo-bar");
+  try { if (localStorage.getItem("ironhouse.banner") === "1") demoBar.remove(); } catch (e) { /* ignore */ }
+  const demoClose = $("#demo-close");
+  if (demoClose) demoClose.addEventListener("click", () => { demoBar.remove(); try { localStorage.setItem("ironhouse.banner", "1"); } catch (e) { /* ignore */ } });
+
   UI.storageNotice();
 
   /* ---------- Start ---------- */
   hydrateIcons();
-  renderPrograms();
+  renderWhenNear("#program-grid", renderPrograms);
+  renderWhenNear("#trainer-grid", () => { renderTrainers(); observeReveal(); });
   renderPlans();
   renderClasses();
   observeReveal();

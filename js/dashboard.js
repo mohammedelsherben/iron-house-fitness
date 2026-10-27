@@ -66,7 +66,7 @@
     const max = Math.ceil(Math.max(...data) / 50000) * 50000;
     const slot = (W - L - R) / data.length, bw = Math.min(34, slot * 0.62);
     const y = (v) => T + (H - T - B) * (1 - v / max);
-    let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">`;
+    let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
     for (let i = 0; i <= 4; i++) {
       const v = (max / 4) * i, yy = y(v);
       svg += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" class="grid"/><text x="${L - 10}" y="${yy + 4}" text-anchor="end" class="axis">${v === 0 ? "0" : Math.round(v / 1000) + "k"}</text>`;
@@ -112,14 +112,14 @@
       (list.length ? list.map((m) => `<tr><td>${memberCell(m)}</td><td>${esc(planName(m.plan))}</td><td class="hide-sm">${fmtDate(IH.parseDay(m.joinedAt))}</td><td>${badge(stateOf(m))}</td></tr>`).join("")
         : `<tr><td colspan="4" class="muted center">No registrations yet.</td></tr>`) + "</tbody>";
   }
-  const memberCell = (m) => `<div class="who"><span class="avatar-sm" aria-hidden="true">${esc(m.name[0])}</span><div><strong>${esc(m.name)}</strong><span class="muted">${esc(m.email)}</span></div></div>`;
+  const memberCell = (m) => `<div class="who"><span class="avatar-sm" aria-hidden="true">${esc(m.name[0])}</span><div><strong>${esc(m.name)}</strong><span class="muted">${esc(m.email || m.phone)}</span></div></div>`;
 
   /* ---------- Members table ---------- */
   function filtered() {
     const q = filters.q.trim().toLowerCase();
     const list = members.filter((m) => {
       const state = stateOf(m);
-      return (!q || m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q) || m.id.toLowerCase().includes(q)) &&
+      return (!q || m.name.toLowerCase().includes(q) || (m.email || "").toLowerCase().includes(q) || (m.phone || "").replace(/\s/g, "").includes(q.replace(/\s/g, "")) || m.id.toLowerCase().includes(q)) &&
         (filters.status === "all" || state === filters.status) && (filters.plan === "all" || m.plan === filters.plan);
     });
     const val = {
@@ -182,7 +182,7 @@
     $("#bookings-table").style.display = list.length ? "" : "none";
     $("#bookings-table").innerHTML = `<thead><tr><th>Client</th><th>Trainer</th><th class="hide-sm">Session</th><th>Date & time</th><th>Actions</th></tr></thead><tbody>` +
       list.map((b) => `<tr>
-        <td><div class="who"><span class="avatar-sm" aria-hidden="true">${esc(b.name[0])}</span><div><strong>${esc(b.name)}</strong><span class="muted">${esc(b.email)}</span></div></div></td>
+        <td><div class="who"><span class="avatar-sm" aria-hidden="true">${esc(b.name[0])}</span><div><strong>${esc(b.name)}</strong><span class="muted">${esc(b.email || b.phone)}</span></div></div></td>
         <td>${esc(b.trainerName)}</td><td class="hide-sm">${esc(b.type)}</td>
         <td><strong>${fmtDate(IH.parseDay(b.date))}</strong><br><span class="muted">${esc(UI.fmtTime(b.time))}</span></td>
         <td><button type="button" class="icon-btn danger" data-del-booking="${esc(b.id)}" aria-label="Delete booking for ${esc(b.name)}">${icon("trash")}</button></td></tr>`).join("") + "</tbody>";
@@ -213,7 +213,7 @@
       html: `<form id="am-form" novalidate>
         <div class="field"><label for="am-name">Full name</label><input class="input" id="am-name" name="name" data-rule="name" autocomplete="off"><div class="field-error" role="alert"></div></div>
         <div class="field"><label for="am-email">Email</label><input class="input" id="am-email" name="email" type="email" data-rule="email" autocomplete="off"><div class="field-error" role="alert"></div></div>
-        <div class="field"><label for="am-phone">Phone</label><input class="input" id="am-phone" name="phone" type="tel" data-rule="phone" autocomplete="off" placeholder="+20 100 000 0000"><div class="field-error" role="alert"></div></div>
+        <div class="field"><label for="am-phone">Phone</label><input class="input" id="am-phone" name="phone" type="tel" data-rule="phone" autocomplete="off" placeholder="01001234567"><div class="field-error" role="alert"></div></div>
         <div class="field"><label for="am-plan">Plan</label><select class="select" id="am-plan" name="plan" data-rule="required">${plans.map((p) => `<option value="${p.id}">${esc(p.name)} · ${fmtEGP(p.price)}</option>`).join("")}</select><div class="field-error" role="alert"></div></div>
         <button class="btn btn-primary btn-block" type="submit">Add member</button></form>`,
       onOpen(modal) {
@@ -322,14 +322,12 @@
   hydrateIcons();
   $("#m-plan").insertAdjacentHTML("beforeend", plans.map((p) => `<option value="${p.id}">${esc(p.name)}</option>`).join(""));
   route();
-  skeletons();
-  setTimeout(() => {
-    try {
-      members = IH.getMembers();
-      if (!members.every((m) => m && m.id && m.name && m.joinedAt)) throw new Error("Saved demo data looks damaged.");
-      renderAll();
-    } catch (err) {
-      showError(err.message || "The demo data could not be loaded.");
-    }
-  }, 600);
+  // Render straight away (no fake loading delay): the placeholder-then-content swap caused layout shift
+  try {
+    members = IH.getMembers();
+    if (!members.every((m) => m && m.id && m.name && m.joinedAt)) throw new Error("Saved demo data looks damaged.");
+    renderAll();
+  } catch (err) {
+    showError(err.message || "The demo data could not be loaded.");
+  }
 })();

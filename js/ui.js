@@ -1,4 +1,4 @@
-/* ==========================================================
+﻿/* ==========================================================
    IRON HOUSE FITNESS — small UI helpers shared by both pages
    icons, escaping, formatting, toast, accessible modal, validation
    ========================================================== */
@@ -141,12 +141,51 @@
     return api;
   }
 
+  /* ---------- Egyptian mobile numbers ---------- */
+  /** Returns the number as 01XXXXXXXXX (010 / 011 / 012 / 015), or "" when it is not a valid Egyptian mobile.
+      Accepts spaces, dashes, +20 / 0020 / 20 prefixes and Arabic-Indic digits. */
+  function normalizeEgyptPhone(value) {
+    let s = String(value || "").replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 1632)).replace(/[\s().-]/g, "");
+    if (s.startsWith("+20")) s = "0" + s.slice(3);
+    else if (s.startsWith("0020")) s = "0" + s.slice(4);
+    else if (/^20\d{10}$/.test(s)) s = "0" + s.slice(2);
+    return /^01[0125]\d{8}$/.test(s) ? s : "";
+  }
+
+  /* ---------- Site settings (js/config.js): WhatsApp link, contact details, social icons ---------- */
+  const CFG = () => window.IH_CONFIG || {};
+  /** https://wa.me/<number>?text=<message>, or "" when no WhatsApp number is configured. */
+  function waLink(message) {
+    const number = String(CFG().whatsappNumber || "").replace(/\D/g, "");
+    return number ? `https://wa.me/${number}?text=${encodeURIComponent(message || "")}` : "";
+  }
+  const SOCIALS = [["instagram", "Instagram"], ["facebook", "Facebook"], ["youtube", "YouTube"]];
+  /** Fills every [data-cfg] element, builds the social icons and hides whatever has no value. */
+  function applyConfig(root) {
+    const c = CFG(), scope = root || document;
+    $$("[data-cfg]", scope).forEach((el) => {
+      const key = el.dataset.cfg, value = String(c[key] || "").trim();
+      const holder = el.closest("[data-cfg-item]");
+      if (!value) { if (holder) holder.hidden = true; else el.hidden = true; return; }
+      if (key === "phone") { el.href = "tel:" + value.replace(/[^\d+]/g, ""); }
+      else if (key === "email") { el.href = "mailto:" + value; }
+      el.textContent = value;
+    });
+    $$("[data-socials]", scope).forEach((box) => {
+      box.innerHTML = SOCIALS.filter(([key]) => String(c[key] || "").trim()).map(([key, label]) =>
+        `<li><a href="${esc(c[key])}" target="_blank" rel="noopener noreferrer" aria-label="${label}">${icon(key)}</a></li>`).join("");
+      const none = !box.children.length;
+      const holder = box.closest("[data-socials-wrap]") || box;
+      holder.hidden = none;
+    });
+  }
+
   /* ---------- Form validation ---------- */
   const rules = {
     name: (v) => (v.trim().length >= 2 ? "" : "Please enter your full name."),
     email: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "Please enter a valid email address."),
     // Accepts +20 1xx xxx xxxx, 01xxxxxxxxx and similar: 8–15 digits, optional +, spaces, dashes.
-    phone: (v) => (/^\+?[\d\s-]{8,18}$/.test(v.trim()) && v.replace(/\D/g, "").length >= 8 && v.replace(/\D/g, "").length <= 15 ? "" : "Please enter a valid phone number (8–15 digits)."),
+    phone: (v) => (normalizeEgyptPhone(v) ? "" : "Enter a valid Egyptian mobile number, like 01001234567."),
     required: (v) => (v.trim() ? "" : "This field is required."),
     age: (v) => (v.trim() !== "" && Number(v) >= 15 && Number(v) <= 80 ? "" : "Enter an age between 15 and 80."),
     height: (v) => (v.trim() !== "" && Number(v) >= 120 && Number(v) <= 230 ? "" : "Enter a height between 120 and 230 cm."),
@@ -191,11 +230,11 @@
     box.className = "notice";
     box.setAttribute("role", "region");
     box.setAttribute("aria-label", "Storage notice");
-    box.innerHTML = `<p>This site stores your language choice and demo data only in your browser. It uses no tracking or advertising cookies.</p>
+    box.innerHTML = `<p>This site stores your language choice and your recent enquiries only in your browser. It uses no tracking or advertising cookies.</p>
       <div class="notice-actions"><a href="privacy.html" class="notice-link">Privacy Policy</a><button type="button" class="btn btn-primary btn-sm">Got it</button></div>`;
     document.body.appendChild(box);
     $("button", box).addEventListener("click", () => { try { localStorage.setItem("ironhouse.notice", "1"); } catch (e) { /* ignore */ } box.remove(); });
   }
 
-  window.UI = { storageNotice, icon, hydrateIcons, $, $$, esc, fmtNum, fmtEGP, fmtDate, fmtTime, toast, openModal, validateForm, liveClear };
+  window.UI = { normalizeEgyptPhone, waLink, applyConfig, storageNotice, icon, hydrateIcons, $, $$, esc, fmtNum, fmtEGP, fmtDate, fmtTime, toast, openModal, validateForm, liveClear };
 })();

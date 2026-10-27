@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  const IMG = (id, w) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=70`;
+  const IMG = (id, w) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=55`;
 
   /* ---------- Browser storage (safe wrapper) ---------- */
   const store = {
@@ -166,9 +166,9 @@
 
   /* ---------- Testimonials (fictional demo profiles) ---------- */
   const TESTIMONIALS = [
-    { name: "Mariam S.", role: "Demo member · Quarterly plan", quote: "The coaches explain everything clearly, and the classes keep me coming back. It is the first gym routine I have actually stuck with." },
-    { name: "Youssef K.", role: "Demo member · Annual plan", quote: "Great equipment, a motivating atmosphere and trainers who notice when your form slips. Easy choice for me." },
-    { name: "Hana R.", role: "Demo member · Monthly plan", quote: "I started with the Beginner Strength program and felt welcome from day one. The schedule fits around my work hours." },
+    { name: "Mariam S.", role: "Member · Quarterly plan", quote: "The coaches explain everything clearly, and the classes keep me coming back. It is the first gym routine I have actually stuck with." },
+    { name: "Youssef K.", role: "Member · Annual plan", quote: "Great equipment, a motivating atmosphere and trainers who notice when your form slips. Easy choice for me." },
+    { name: "Hana R.", role: "Member · Monthly plan", quote: "I started with the Beginner Strength program and felt welcome from day one. The schedule fits around my work hours." },
   ];
 
   /* ---------- Dashboard demo members ---------- */
@@ -268,12 +268,7 @@
   /* Fictional monthly revenue (EGP) for the last 12 months. */
   const REVENUE = [96000, 104000, 99000, 112000, 118000, 125000, 121000, 134000, 142000, 138000, 151000, 163000];
 
-  /* Site settings. WhatsApp: put the gym's number in international format without "+" (for example "201001234567").
-     While it is empty the button opens WhatsApp with the message ready and lets the visitor choose the contact. */
-  const SITE = { whatsapp: "" };
-
   window.IH = {
-    SITE,
     IMG, store, KEYS, PLANS_BASE, getPlans, setPlanPrice, resetPlanPrices,
     CATEGORIES, PROGRAMS, TRAINERS, DAYS, CLASS_TYPES, CLASSES, TESTIMONIALS,
     getMembers, saveMembers, resetMembers, addMember, memberState, expiryDate, daysLeft,
